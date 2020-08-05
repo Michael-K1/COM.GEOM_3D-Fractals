@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
-[ExecuteInEditMode, ImageEffectAllowedInSceneView]
+[ExecuteInEditMode]
+[ImageEffectAllowedInSceneView]
 public class FractalVisualizer : MonoBehaviour{
     [SerializeField] 
     private Shader rayMarchingShader;
     private Material rayMarchMat;
-    public Material RayMarchMaterial{
+
+    private Material RayMarchMaterial{
         get{
             if (!rayMarchMat && rayMarchingShader)
                 rayMarchMat = new Material(rayMarchingShader){hideFlags = HideFlags.HideAndDontSave};//doesn't get dispose by garbage collector
@@ -15,7 +17,8 @@ public class FractalVisualizer : MonoBehaviour{
     }
 
     private Camera _cam;
-    public Camera thisCamera{
+
+    private Camera ThisCamera{
         get{
             if (!_cam)
                 _cam = GetComponent<Camera>();
@@ -29,12 +32,17 @@ public class FractalVisualizer : MonoBehaviour{
     [Range(1, 1000)]
     public float MAX_DISTANCE;
     [Range(1, 400)] 
-    public int MAX_STEPS;
+    public int MAX_STEPS=164;
     [Range(.1f, .001f)] 
     public float ACCURACY;
 
     #endregion
-
+    [Header("Environment")]
+    public Color groundColor;
+    [Range(0,4)]
+    public float colorIntensity;
+    [Range(0,4)]
+    public float shapeBlending;
     #region Lighting
 
     [Header("Directional Light")] 
@@ -63,15 +71,83 @@ public class FractalVisualizer : MonoBehaviour{
     #region Fractals Parameter
 
     [Header("Signed Distance Field")] //here are the parameters for the fractals
-    public Color groundColor;
+    
+    
     //tetrahedron
-    public Vector4 tetrahedronPosAndScale;
+    public Vector3 tetrahedronPos;
     [Range(1, 100)]
     public int tetraIterations;
+    [Range(1.00001f, 2.50000f)]
+    public float tetraScale;
+    public Color tetraColor;
     #endregion
 
     private void OnRenderImage(RenderTexture src, RenderTexture dest){
+        if (!RayMarchMaterial){
+            Graphics.Blit(src,dest);
+            return;
+            
+        }
+        //view setup
+        RayMarchMaterial.SetMatrix("CamFrustum",CamFrustum(ThisCamera));
+        RayMarchMaterial.SetMatrix("CamToWorld", ThisCamera.cameraToWorldMatrix);
         
+        //raymarch setup
+        RayMarchMaterial.SetInt("maxRaySteps", MAX_STEPS);
+        RayMarchMaterial.SetFloat("maxRayDistance", MAX_DISTANCE);
+        RayMarchMaterial.SetFloat("ACCURACY", ACCURACY);
+        
+        
+        //LIGHTING
+        RayMarchMaterial.SetVector("_LightDir", directionalLight?directionalLight.forward: Vector3.down);
+        RayMarchMaterial.SetColor("_LightColor",lightColor);
+        RayMarchMaterial.SetFloat("_LightIntensity",lightIntensity);
+        
+        //shadows
+        RayMarchMaterial.SetFloat("_ShadowIntensity", shadowIntensity);
+        RayMarchMaterial.SetFloat("_ShadowPenumbra", shadowPenumbra);
+        RayMarchMaterial.SetVector("_ShadowDistance", shadowDistance);
+        
+        //Ambient Occlusion
+        RayMarchMaterial.SetFloat("_AOStepSize", aoStepSize);
+        RayMarchMaterial.SetFloat("_AOIntensity", aoIntensity);
+        RayMarchMaterial.SetInt("_AOIteration", aoIteration);
+        
+        //Environment
+        RayMarchMaterial.SetColor("groundColor", groundColor);
+        RayMarchMaterial.SetFloat("_ColorIntensity", colorIntensity );
+        RayMarchMaterial.SetFloat("shapeBlending", shapeBlending );
+        
+        //TETRAHEDRON
+        RayMarchMaterial.SetVector("tetraPos",tetrahedronPos);
+        RayMarchMaterial.SetFloat("tetraScale", tetraScale);
+        RayMarchMaterial.SetInt("tetraIterations", tetraIterations);
+        RayMarchMaterial.SetColor("tetraColor",tetraColor);
+        
+        RenderTexture.active = dest;
+        RayMarchMaterial.SetTexture("_MainTex", src);
+        
+        GL.PushMatrix();
+        GL.LoadOrtho();
+        RayMarchMaterial.SetPass(0);
+        GL.Begin(GL.QUADS);
+        
+        //BottomLeft of the quad
+        GL.MultiTexCoord2(0,.0f,.0f);
+        GL.Vertex3(.0f,.0f,3.0f);
+        //BR of the quad
+        GL.MultiTexCoord2(0,1.0f,.0f);
+        GL.Vertex3(1.0f,.0f,2.0f);
+        //TR of the quad
+        GL.MultiTexCoord2(0,1.0f,1.0f);
+        GL.Vertex3(1.0f,1.0f,1.0f);
+        //TL of the quad
+        GL.MultiTexCoord2(0,.0f,1.0f);
+        GL.Vertex3(.0f,1.0f,0.0f);
+        
+        GL.End();
+        GL.PopMatrix();
+
     }
 
     private Matrix4x4 CamFrustum(Camera c){
