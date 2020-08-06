@@ -14,7 +14,7 @@
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma target 3.0
+            #pragma target 5.0
 
             #include "UnityCG.cginc"
             #include "FractalsDistanceEstimation.cginc"
@@ -51,6 +51,13 @@
             uniform float tetraScale;
             uniform int tetraIterations;
             uniform fixed4 tetraColor;
+            
+            //paxis
+            uniform fixed4 paxisColor;
+            uniform float3 paxisPos;
+            uniform int paxisIter1, paxisIter2;
+            uniform float paxisMult;
+            
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -84,7 +91,11 @@
             float4 distanceField(float3 pos){
                 float4 ground=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));
                 float4 tetra=float4(tetraColor.rgb, sdTetrahedron(pos-tetraPos.xyz, tetraIterations,tetraScale));
-                return opUS(ground, tetra, shapeBlending);
+                float4 paxis=float4(paxisColor.rgb, sdPaxis(pos-paxisPos.xyz, paxisIter1, paxisIter2, paxisMult));
+                
+                float4 combine= opUS(paxis, tetra, shapeBlending);
+                
+                return opUS(ground, combine, shapeBlending);
             }
             
             float3 getNormal(float3 p){     //get the normal by offsetting the pos 

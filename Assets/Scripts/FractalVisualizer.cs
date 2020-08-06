@@ -70,16 +70,27 @@ public class FractalVisualizer : MonoBehaviour{
 
     #region Fractals Parameter
 
-    [Header("Signed Distance Field")] //here are the parameters for the fractals
+    //[Header("Signed Distance Field"),Space] //here are the parameters for the fractals
     
-    
-    //tetrahedron
+    [Header("Tetrahedron")]
     public Vector3 tetrahedronPos;
     [Range(1, 50)]
     public int tetraIterations;
     [Range(1.00001f, 2.50000f)]
     public float tetraScale;
     public Color tetraColor;
+
+    [Header("Paxis")] 
+    public Vector3 paxisPos;
+    public Color paxisColor;
+    [Range(1, 3)]
+    public int paxisIter1;
+    [Range(1, 10)]
+    public int paxisIter2;
+    [Range(.1f, .29f)]
+    public float paxisMult;
+    
+    
     #endregion
 
     private void OnRenderImage(RenderTexture src, RenderTexture dest){
@@ -124,6 +135,13 @@ public class FractalVisualizer : MonoBehaviour{
         RayMarchMaterial.SetInt("tetraIterations", tetraIterations);
         RayMarchMaterial.SetColor("tetraColor",tetraColor);
         
+        //PAXIS
+        RayMarchMaterial.SetVector("paxisPos", paxisPos);
+        RayMarchMaterial.SetColor("paxisColor", paxisColor);
+        RayMarchMaterial.SetFloat("paxisMult", paxisMult);
+        RayMarchMaterial.SetInt("paxisIter1", paxisIter1);
+        RayMarchMaterial.SetInt("paxisIter2", paxisIter2);
+
         RenderTexture.active = dest;
         RayMarchMaterial.SetTexture("_MainTex", src);
         

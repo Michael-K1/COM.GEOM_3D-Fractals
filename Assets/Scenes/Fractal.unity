@@ -292,7 +292,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.521, z: -1.714}
+  m_LocalPosition: {x: 1.89, y: 0.84, z: -1.714}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -311,7 +311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayMarchingShader: {fileID: 4800000, guid: c41482ed31ab010408ef86c3aacd25c3, type: 3}
-  MAX_DISTANCE: 100
+  MAX_DISTANCE: 30
   MAX_STEPS: 400
   ACCURACY: 0.001
   groundColor: {r: 1, g: 1, b: 1, a: 0}
@@ -320,16 +320,21 @@ MonoBehaviour:
   directionalLight: {fileID: 705507995}
   lightColor: {r: 1, g: 1, b: 1, a: 0}
   lightIntensity: 1
-  shadowIntensity: 0.9
+  shadowIntensity: 1.19
   shadowPenumbra: 41.1
   shadowDistance: {x: 0.1, y: 100}
-  aoStepSize: 1.06
+  aoStepSize: 1.4
   aoIteration: 2
   aoIntensity: 0.125
-  tetrahedronPos: {x: 0, y: 1.11, z: 0}
-  tetraIterations: 17
+  tetrahedronPos: {x: 0, y: 1, z: 0.18}
+  tetraIterations: 25
   tetraScale: 1.00001
   tetraColor: {r: 0.36658788, g: 1, b: 0, a: 0}
+  paxisPos: {x: -3.9, y: 1, z: 0}
+  paxisColor: {r: 0.1273585, g: 0.8672691, b: 1, a: 0}
+  paxisIter1: 2
+  paxisIter2: 10
+  paxisMult: 0.28
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
