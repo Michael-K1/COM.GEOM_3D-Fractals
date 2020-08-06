@@ -75,7 +75,7 @@ public class FractalVisualizer : MonoBehaviour{
     
     //tetrahedron
     public Vector3 tetrahedronPos;
-    [Range(1, 100)]
+    [Range(1, 50)]
     public int tetraIterations;
     [Range(1.00001f, 2.50000f)]
     public float tetraScale;

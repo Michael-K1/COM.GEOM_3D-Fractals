@@ -9,10 +9,10 @@ float sdPlane(float3 p, float4 n){
 // FRACTALS //
 //recursive Tetrahedron
 float sdTetrahedron(float3 pos, int iterations, float scale){
-    float3 a1=float3(1, 1, 1);
-    float3 a2=float3(-1, -1, 1);
-    float3 a3=float3(1, -1, -1);
-    float3 a4=float3(-1, 1, -1);
+    float3 a1=float3(1, 1, 1)  * scale;
+    float3 a2=float3(-1, -1, 1)* scale;
+    float3 a3=float3(1, -1, -1)* scale;
+    float3 a4=float3(-1, 1, -1)* scale;
     
     float3 c;
     float dist, d;
@@ -38,8 +38,8 @@ float sdTetrahedron(float3 pos, int iterations, float scale){
             c=a4;
             dist=d;
         }
-        pos=scale*pos - c* (scale-1.0);      
+        pos=2.0*pos - c;      
     }
     
-    return length(pos)*pow(scale, float(-i));
+    return length(pos)*pow(2.0, float(-i));
 }
