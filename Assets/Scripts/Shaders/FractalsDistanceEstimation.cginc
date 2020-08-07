@@ -90,38 +90,39 @@ float sdPaxis(float3 pos, int iter1, int iter2, float mult, int iter1Swap, int i
 }
 
 
-float sdMandelbulb3D(float3 pos, int mandelIterations){
-    float3 w=pos;
-    float m=dot(w, w);
-    
-    float4 trap=float4(abs(w), m);
-        
-    float dz=2;
-    
-    for (int i=0;i<mandelIterations;i++){
-        float m2=m*m;
-        float m4=m2*m2;
-        dz*=8*sqrt(m4*m2*m)+1;
-        
-        float x = w.x; float x2 = x*x; float x4 = x2*x2;
-        float y = w.y; float y2 = y*y; float y4 = y2*y2;
-        float z = w.z; float z2 = z*z; float z4 = z2*z2;
-        
-        float k3=x2+z2;
-        float k2 = 1.0/sqrt( k3*k3*k3*k3*k3*k3*k3 );
-        float k1 = x4 + y4 + z4 - 6.0*y2*z2 - 6.0*x2*y2 + 2.0*z2*x2;
-        float k4 = x2 - y2 + z2;
-        
-        w.x = pos.x +  64.0*x*y*z*(x2-z2)*k4*(x4-6.0*x2*z2+z4)*k1*k2;
-        w.y = pos.y + -16.0*y2*k3*k4*k4 + k1*k1;
-        w.z = pos.z +  -8.0*y*k4*(x4*x4 - 28.0*x4*x2*z2 + 70.0*x4*z4 - 28.0*x2*z2*z4 + z4*z4)*k1*k2;
 
-        trap=min(trap, float4(abs(w), m));
-        
-        m=dot(w,w);
-        if(m>4) break;
-        
+//Mandelbulb3D
+float sdMandelbulb3D(float3 p, int mandelIterations){
+   float3 z = p;
+    
+    {
+        const float exBR = 1.5;
+        float r = length(p)-exBR;
+        if(r>1.0){return r;}
     }
     
-    return .5*log(m)*sqrt(m)/dz;
+    float dr =1., r=0., pw = 8., fr=.0, theta, phi, zr;
+    for(int i=0;i<mandelIterations;i++)
+    {
+        
+        r=length(z);
+        if(r>2.)
+        {
+            fr = min(0.5*log(r)*r/dr, length(p)-.72);
+            break;
+        }
+        theta=acos(z.z/r)+_Time.y/10.;
+        phi = atan2(z.y,z.x);
+        dr = pow(r,7.)*7.*dr+1.;
+        
+        zr = pow(r,pw);
+        theta = theta*pw;
+        phi = phi*pw;
+        
+        z=zr*float3(sin(theta)*cos(phi),
+                  sin(phi)*sin(theta),
+                  cos(theta))+p;
+    }
+    
+    return fr;
 }

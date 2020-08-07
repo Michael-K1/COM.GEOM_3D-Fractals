@@ -1,4 +1,4 @@
-﻿Shader "Fractals/RayMarching"
+Shader "Fractals/RayMarching"
 {
     Properties
     {
@@ -62,7 +62,7 @@
             
             //mandelbulb
             uniform int showMandel;
-            uniform fixed4 mandelColor;
+            //uniform fixed4 mandelColor;
             uniform float3 mandelPos;
             uniform int mandelIter;
             
@@ -99,7 +99,7 @@
             
             float4 distanceField(float3 pos){
                 if(showMandel==1){
-                    float4 mandel=float4(mandelColor.rgb, sdMandelbulb3D(pos-mandelPos.xyz, mandelIter));
+                    float4 mandel=float4(float3(0,0,0), sdMandelbulb3D(pos-mandelPos.xyz, mandelIter));
                     return mandel;
                 }
             
@@ -113,7 +113,6 @@
                     combine= opUS(combine, paxis, shapeBlending);
                 }
              
-
                 return combine;
                 
             }
@@ -177,9 +176,31 @@
                 
                 return result;
             }
+            float g=0;
+            float3 mandelColor(float3 ro, float3 rd, float r){
+                float3 c = float3(0,0,0);
+                float3 cs = 0.5 + 0.5*cos(_Time.y+rd.xyx+float3(0,2,4));
+                
+                if(r>0.)
+                {
+                    float3 p = ro+rd*r;
+                    float3 n = getNormal(p);
+                    float3 sun = normalize(float3(0.2,0.5,0.3));
+                    float dif = clamp(dot(sun,n),0.0,1.0);
+                    float sky = clamp(0.5+0.5*dot(n,float3(0,1,0)),0.,1.);
+                    
+                    c=float3(r,r,r)*-.1;
+                    c+=cs*r*dif;
+                    c+=r*sky*float3(0.9,0.5,0.5);
+                    
+                }
+                
+                
+                return c+(g/75.*cs);
+            }
             
             bool RayMarching(float3 rayOrigin, float3 rayDirection, float depth, float maxRayDist, int maxIteration, inout float3 pos, inout fixed3 dColor){
-               bool hit;
+                bool hit;
                 float t=0; //distance traveled along the ray direction
                 
                 for(int i=0;i<maxIteration;i++ ){
@@ -192,9 +213,13 @@
                     
                       //check for hit in distance field
                     float4 d=distanceField(pos);
-                    
+                    g+=0.1/(0.1+d.w*d.w);
                     if(d.w<ACCURACY){//the ray has hit something
-                        dColor=d.rgb;
+                        if(showMandel==1){
+                            float3 col=mandelColor(rayOrigin, rayDirection, t);
+                            dColor=fixed3(col.rgb);                  
+                        }else
+                            dColor=d.rgb;
                         hit= true;
                         break;
                     }
@@ -202,6 +227,8 @@
                 }
                 return hit;
             }
+            
+            
             
             fixed4 frag (v2f i) : SV_Target{
                 float depth=LinearEyeDepth(tex2D(_CameraDepthTexture, i.uv).r);
@@ -225,7 +252,7 @@
                 }else
                     result=fixed4(0,0,0,0);
                 
-                
+
                 
                 return fixed4(col * (1.0- result.w) + result.xyz * result.w, 1.0 );             
             }

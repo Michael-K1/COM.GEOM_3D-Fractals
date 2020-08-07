@@ -292,7 +292,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.89, y: 0.84, z: -1.714}
+  m_LocalPosition: {x: 1.89, y: 0.84, z: -4.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -326,20 +326,23 @@ MonoBehaviour:
   aoStepSize: 1.4
   aoIteration: 2
   aoIntensity: 0.125
+  showTetra: 1
   tetrahedronPos: {x: 1.2, y: 2.53, z: 0.18}
-  tetraIterations: 17
-  tetraScale: 1.56
+  tetraIterations: 27
+  tetraScale: 2.5
   tetraColor: {r: 1, g: 1, b: 0, a: 0}
+  showPaxis: 1
   paxisPos: {x: -3.9, y: 1, z: 0}
   paxisColor: {r: 0, g: 1, b: 1, a: 0}
-  paxisSwapA: 0
-  paxisSwapB: 0
-  paxisIter1: 1
-  paxisIter2: 1
-  paxisMult: 0.1
-  mandelColor: {r: 1, g: 0, b: 0, a: 0}
-  mandelPos: {x: -0.96, y: 3, z: 0}
-  mandelIter: 3
+  paxisSwapA: 1
+  paxisSwapB: 1
+  paxisIter1: 3
+  paxisIter2: 20
+  paxisMult: 0.29
+  showMandel: 0
+  mandelColor: {r: 1, g: 1, b: 1, a: 0}
+  mandelPos: {x: 0, y: 0, z: 0}
+  mandelIter: 1
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0

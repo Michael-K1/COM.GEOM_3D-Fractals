@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 [ExecuteInEditMode]
@@ -37,6 +37,7 @@ public class FractalVisualizer : MonoBehaviour{
     public float ACCURACY;
 
     #endregion
+    
     [Header("Environment")]
     public Color groundColor;
     [Range(0,4)]
@@ -97,7 +98,7 @@ public class FractalVisualizer : MonoBehaviour{
     public bool showMandel;
     public Color mandelColor;
     public Vector3 mandelPos;
-    [Range(1, 4)] 
+    [Range(1, 10)] 
     public int mandelIter;
     
     #endregion
@@ -120,7 +121,7 @@ public class FractalVisualizer : MonoBehaviour{
         RayMarchMaterial.SetInt("maxRaySteps", MAX_STEPS);
         RayMarchMaterial.SetFloat("maxRayDistance", MAX_DISTANCE);
         RayMarchMaterial.SetFloat("ACCURACY", ACCURACY);
-        
+        RayMarchMaterial.SetInt("randomColor", showMandel?1:0);
         
         //LIGHTING
         RayMarchMaterial.SetVector("_LightDir", directionalLight?directionalLight.forward: Vector3.down);
