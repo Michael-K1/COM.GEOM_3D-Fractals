@@ -83,13 +83,13 @@ public class FractalVisualizer : MonoBehaviour{
     [Header("Paxis")] 
     public Vector3 paxisPos;
     public Color paxisColor;
+    public  bool paxisSwapA, paxisSwapB;
     [Range(1, 3)]
     public int paxisIter1;
-    [Range(1, 10)]
+    [Range(1, 20)]
     public int paxisIter2;
     [Range(.1f, .29f)]
     public float paxisMult;
-    
     
     #endregion
 
@@ -139,8 +139,10 @@ public class FractalVisualizer : MonoBehaviour{
         RayMarchMaterial.SetVector("paxisPos", paxisPos);
         RayMarchMaterial.SetColor("paxisColor", paxisColor);
         RayMarchMaterial.SetFloat("paxisMult", paxisMult);
-        RayMarchMaterial.SetInt("paxisIter1", paxisIter1);
+        RayMarchMaterial.SetInt("paxisIter1", paxisSwapB ? Mathf.Clamp(paxisIter1,1,2): paxisIter1);
         RayMarchMaterial.SetInt("paxisIter2", paxisIter2);
+        RayMarchMaterial.SetInt("paxisIter1Swap", paxisSwapA ? 1 : 0);
+        RayMarchMaterial.SetInt("paxisIter2Swap", paxisSwapB? 1 : 0);
 
         RenderTexture.active = dest;
         RayMarchMaterial.SetTexture("_MainTex", src);

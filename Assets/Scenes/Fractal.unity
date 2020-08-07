@@ -332,8 +332,10 @@ MonoBehaviour:
   tetraColor: {r: 0.36658788, g: 1, b: 0, a: 0}
   paxisPos: {x: -3.9, y: 1, z: 0}
   paxisColor: {r: 0.1273585, g: 0.8672691, b: 1, a: 0}
-  paxisIter1: 2
-  paxisIter2: 10
+  paxisSwapA: 1
+  paxisSwapB: 1
+  paxisIter1: 3
+  paxisIter2: 20
   paxisMult: 0.28
 --- !u!114 &963194230
 MonoBehaviour:

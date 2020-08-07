@@ -55,7 +55,7 @@
             //paxis
             uniform fixed4 paxisColor;
             uniform float3 paxisPos;
-            uniform int paxisIter1, paxisIter2;
+            uniform int paxisIter1, paxisIter2, paxisIter1Swap, paxisIter2Swap;
             uniform float paxisMult;
             
             struct appdata
@@ -91,7 +91,7 @@
             float4 distanceField(float3 pos){
                 float4 ground=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));
                 float4 tetra=float4(tetraColor.rgb, sdTetrahedron(pos-tetraPos.xyz, tetraIterations,tetraScale));
-                float4 paxis=float4(paxisColor.rgb, sdPaxis(pos-paxisPos.xyz, paxisIter1, paxisIter2, paxisMult));
+                float4 paxis=float4(paxisColor.rgb, sdPaxis(pos-paxisPos.xyz, paxisIter1, paxisIter2, paxisMult, paxisIter1Swap, paxisIter2Swap));
                 
                 float4 combine= opUS(paxis, tetra, shapeBlending);
                 

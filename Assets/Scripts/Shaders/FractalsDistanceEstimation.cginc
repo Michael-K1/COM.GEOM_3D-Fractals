@@ -62,19 +62,25 @@ float3 paxis2(float3 p){
     return fsign(p) * max(fsign(a - min(a.yzx, a.zxy)),0.0);
 }
 
-float sdPaxis(float3 pos, int iter1, int iter2, float mult){
+float sdPaxis(float3 pos, int iter1, int iter2, float mult, int iter1Swap, int iter2Swap){
     float b=1.0;
     
     // change both 'fors' between paxis and paxis2 to create different fractals
     // CAREFUL with the number of iterations in both
     for (int i=0; i<iter1;i++){
-        pos-=paxis2(pos) * b* abs(sin(_Time.y*0.1));
+        if(iter1Swap==0)
+            pos-=paxis(pos) * b* abs(sin(_Time.y*0.1));
+        else
+            pos-=paxis2(pos) * b* abs(sin(_Time.y*0.1));
         b*=0.5;
     }
     float d=length(pos)-mult;   //0.1<=mult<=0.3
     
     for (i=0; i<iter2;i++){
-        pos-=paxis(pos) * b;
+        if(iter2Swap==0)
+            pos-=paxis2(pos) * b;
+        else
+            pos-=paxis(pos) * b;
         b*=0.5;
     }
     
