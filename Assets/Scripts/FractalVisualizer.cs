@@ -71,8 +71,9 @@ public class FractalVisualizer : MonoBehaviour{
     #region Fractals Parameter
 
     //[Header("Signed Distance Field"),Space] //here are the parameters for the fractals
-    
-    [Header("Tetrahedron")]
+
+    [Header("Tetrahedron")] 
+    public bool showTetra;
     public Vector3 tetrahedronPos;
     [Range(1, 50)]
     public int tetraIterations;
@@ -81,6 +82,7 @@ public class FractalVisualizer : MonoBehaviour{
     public Color tetraColor;
 
     [Header("Paxis")] 
+    public bool showPaxis;
     public Vector3 paxisPos;
     public Color paxisColor;
     public  bool paxisSwapA, paxisSwapB;
@@ -90,6 +92,13 @@ public class FractalVisualizer : MonoBehaviour{
     public int paxisIter2;
     [Range(.1f, .29f)]
     public float paxisMult;
+
+    [Header("MandelBulb3D")] 
+    public bool showMandel;
+    public Color mandelColor;
+    public Vector3 mandelPos;
+    [Range(1, 4)] 
+    public int mandelIter;
     
     #endregion
 
@@ -99,6 +108,10 @@ public class FractalVisualizer : MonoBehaviour{
             return;
             
         }
+
+        if (showMandel)
+            showTetra = showPaxis = !showMandel;
+        
         //view setup
         RayMarchMaterial.SetMatrix("CamFrustum",CamFrustum(ThisCamera));
         RayMarchMaterial.SetMatrix("CamToWorld", ThisCamera.cameraToWorldMatrix);
@@ -130,12 +143,14 @@ public class FractalVisualizer : MonoBehaviour{
         RayMarchMaterial.SetFloat("shapeBlending", shapeBlending );
         
         //TETRAHEDRON
+        RayMarchMaterial.SetInt("showTetra", showTetra?1:0);
         RayMarchMaterial.SetVector("tetraPos",tetrahedronPos);
         RayMarchMaterial.SetFloat("tetraScale", tetraScale);
         RayMarchMaterial.SetInt("tetraIterations", tetraIterations);
         RayMarchMaterial.SetColor("tetraColor",tetraColor);
         
         //PAXIS
+        RayMarchMaterial.SetInt("showPaxis", showPaxis?1:0);
         RayMarchMaterial.SetVector("paxisPos", paxisPos);
         RayMarchMaterial.SetColor("paxisColor", paxisColor);
         RayMarchMaterial.SetFloat("paxisMult", paxisMult);
@@ -144,6 +159,12 @@ public class FractalVisualizer : MonoBehaviour{
         RayMarchMaterial.SetInt("paxisIter1Swap", paxisSwapA ? 1 : 0);
         RayMarchMaterial.SetInt("paxisIter2Swap", paxisSwapB? 1 : 0);
 
+        //MANDELBULB
+        RayMarchMaterial.SetInt("showMandel", showMandel?1:0);
+        RayMarchMaterial.SetVector("mandelPos", mandelPos);
+        RayMarchMaterial.SetColor("mandelColor", mandelColor);
+        RayMarchMaterial.SetInt("mandelIter", mandelIter);
+        
         RenderTexture.active = dest;
         RayMarchMaterial.SetTexture("_MainTex", src);
         

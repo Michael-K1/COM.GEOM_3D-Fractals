@@ -47,16 +47,25 @@
             uniform float shapeBlending;
             
             //tetrahedron
+            uniform int showTetra;
             uniform float3 tetraPos;
             uniform float tetraScale;
             uniform int tetraIterations;
             uniform fixed4 tetraColor;
             
             //paxis
+            uniform int showPaxis;
             uniform fixed4 paxisColor;
             uniform float3 paxisPos;
             uniform int paxisIter1, paxisIter2, paxisIter1Swap, paxisIter2Swap;
             uniform float paxisMult;
+            
+            //mandelbulb
+            uniform int showMandel;
+            uniform fixed4 mandelColor;
+            uniform float3 mandelPos;
+            uniform int mandelIter;
+            
             
             struct appdata
             {
@@ -89,17 +98,29 @@
             }
             
             float4 distanceField(float3 pos){
-                float4 ground=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));
-                float4 tetra=float4(tetraColor.rgb, sdTetrahedron(pos-tetraPos.xyz, tetraIterations,tetraScale));
-                float4 paxis=float4(paxisColor.rgb, sdPaxis(pos-paxisPos.xyz, paxisIter1, paxisIter2, paxisMult, paxisIter1Swap, paxisIter2Swap));
+                if(showMandel==1){
+                    float4 mandel=float4(mandelColor.rgb, sdMandelbulb3D(pos-mandelPos.xyz, mandelIter));
+                    return mandel;
+                }
+            
+                float4 combine=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));
+                if(showTetra==1){
+                    float4 tetra=float4(tetraColor.rgb, sdTetrahedron(pos-tetraPos.xyz, tetraIterations,tetraScale));
+                    combine=opUS(combine, tetra, shapeBlending);
+                }
+                if(showPaxis==1){
+                    float4 paxis=float4(paxisColor.rgb, sdPaxis(pos-paxisPos.xyz, paxisIter1, paxisIter2, paxisMult, paxisIter1Swap, paxisIter2Swap));
+                    combine= opUS(combine, paxis, shapeBlending);
+                }
+             
+
+                return combine;
                 
-                float4 combine= opUS(paxis, tetra, shapeBlending);
-                
-                return opUS(ground, combine, shapeBlending);
             }
             
             float3 getNormal(float3 p){     //get the normal by offsetting the pos 
-                const float2 offset=float2(0.001, 0.0);
+                //const float2 offset=float2(0.001, 0.0);
+                const float2 offset=float2(0.001, -0.001);
                 float3 n=float3(
                             distanceField(p+offset.xyy).w - distanceField(p-offset.xyy).w,
                             distanceField(p+offset.yxy).w - distanceField(p-offset.yxy).w,
