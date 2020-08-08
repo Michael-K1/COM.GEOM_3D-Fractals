@@ -86,17 +86,19 @@ public class FractalVisualizer : MonoBehaviour{
     public bool showPaxis;
     public Vector3 paxisPos;
     public Color paxisColor;
-    public  bool paxisSwapA, paxisSwapB;
+    public  bool paxisSwapA, paxisSwapB,animatePaxis;
     [Range(1, 3)]
     public int paxisIter1;
     [Range(1, 20)]
     public int paxisIter2;
-    [Range(.1f, .29f)]
+    [Range(.1f, 1f)]
     public float paxisMult;
+    [Range(1f, 5f)]
+    public float paxisScale;
 
     [Header("MandelBulb3D")] 
-    public bool showMandel;
     public Color mandelColor;
+    public bool showMandel, animateMandel, mandelDynamicColor;
     public Vector3 mandelPos;
     [Range(1, 10)] 
     public int mandelIter;
@@ -109,10 +111,10 @@ public class FractalVisualizer : MonoBehaviour{
             return;
             
         }
-
+/*
         if (showMandel)
             showTetra = showPaxis = !showMandel;
-        
+        */
         //view setup
         RayMarchMaterial.SetMatrix("CamFrustum",CamFrustum(ThisCamera));
         RayMarchMaterial.SetMatrix("CamToWorld", ThisCamera.cameraToWorldMatrix);
@@ -155,15 +157,19 @@ public class FractalVisualizer : MonoBehaviour{
         RayMarchMaterial.SetVector("paxisPos", paxisPos);
         RayMarchMaterial.SetColor("paxisColor", paxisColor);
         RayMarchMaterial.SetFloat("paxisMult", paxisMult);
+        RayMarchMaterial.SetFloat("paxisScale", paxisScale);
         RayMarchMaterial.SetInt("paxisIter1", paxisSwapB ? Mathf.Clamp(paxisIter1,1,2): paxisIter1);
         RayMarchMaterial.SetInt("paxisIter2", paxisIter2);
         RayMarchMaterial.SetInt("paxisIter1Swap", paxisSwapA ? 1 : 0);
         RayMarchMaterial.SetInt("paxisIter2Swap", paxisSwapB? 1 : 0);
+        RayMarchMaterial.SetInt("animatePaxis", animatePaxis? 1 : 0);
 
         //MANDELBULB
-        RayMarchMaterial.SetInt("showMandel", showMandel?1:0);
         RayMarchMaterial.SetVector("mandelPos", mandelPos);
-        RayMarchMaterial.SetColor("mandelColor", mandelColor);
+        RayMarchMaterial.SetInt("showMandel", showMandel?1:0);
+        RayMarchMaterial.SetInt("animateMandel", animateMandel?1:0);
+        RayMarchMaterial.SetInt("mandelDynamicColor", mandelDynamicColor?1:0);
+        RayMarchMaterial.SetColor("mandelStaticColor", mandelColor);
         RayMarchMaterial.SetInt("mandelIter", mandelIter);
         
         RenderTexture.active = dest;

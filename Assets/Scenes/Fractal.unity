@@ -311,7 +311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rayMarchingShader: {fileID: 4800000, guid: c41482ed31ab010408ef86c3aacd25c3, type: 3}
-  MAX_DISTANCE: 30
+  MAX_DISTANCE: 750
   MAX_STEPS: 400
   ACCURACY: 0.001
   groundColor: {r: 1, g: 1, b: 1, a: 0}
@@ -339,10 +339,12 @@ MonoBehaviour:
   paxisIter1: 3
   paxisIter2: 20
   paxisMult: 0.29
-  showMandel: 0
   mandelColor: {r: 1, g: 1, b: 1, a: 0}
-  mandelPos: {x: 0, y: 0, z: 0}
-  mandelIter: 1
+  showMandel: 1
+  animateMandel: 1
+  mandelDynamicColor: 0
+  mandelPos: {x: 0, y: 1.17, z: 0}
+  mandelIter: 10
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0

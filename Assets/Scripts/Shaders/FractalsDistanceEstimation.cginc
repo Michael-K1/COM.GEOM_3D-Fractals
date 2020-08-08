@@ -1,4 +1,4 @@
-﻿//(Infinite) Plane
+//(Infinite) Plane
 //n.xyz: normal of the plane (normalized)
 //n.w: offset
 float sdPlane(float3 p, float4 n){
@@ -62,25 +62,34 @@ float3 paxis2(float3 p){
     return fsign(p) * max(fsign(a - min(a.yzx, a.zxy)),0.0);
 }
 
-float sdPaxis(float3 pos, int iter1, int iter2, float mult, int iter1Swap, int iter2Swap){
-    float b=1.0;
+float sdPaxis(float3 pos, int iter1, int iter2, float mult, bool iter1Swap, bool iter2Swap,float scale, bool paxisAnimate){
+    float b=scale;
     
     // change both 'fors' between paxis and paxis2 to create different fractals
     // CAREFUL with the number of iterations in both
+    float3 tmp;
     for (int i=0; i<iter1;i++){
-        if(iter1Swap==0)
-            pos-=paxis(pos) * b* abs(sin(_Time.y*0.1));
+        if(iter1Swap)
+            tmp=paxis(pos);        
         else
-            pos-=paxis2(pos) * b* abs(sin(_Time.y*0.1));
+            tmp=paxis2(pos);
+        
+        if(paxisAnimate)
+            tmp*=abs(sin(_Time.y*0.1));
+            
+        pos-=tmp * b;      
+        
         b*=0.5;
     }
     float d=length(pos)-mult;   //0.1<=mult<=0.3
     
     for (i=0; i<iter2;i++){
-        if(iter2Swap==0)
-            pos-=paxis2(pos) * b;
+        if(iter2Swap)
+            tmp=paxis2(pos);
         else
-            pos-=paxis(pos) * b;
+            tmp=paxis(pos);
+        
+        pos-=tmp*b;
         b*=0.5;
     }
     
@@ -92,8 +101,8 @@ float sdPaxis(float3 pos, int iter1, int iter2, float mult, int iter1Swap, int i
 
 
 //Mandelbulb3D
-float sdMandelbulb3D(float3 p, int mandelIterations){
-   float3 z = p;
+float sdMandelbulb3D(float3 p, int mandelIterations, int animateMandel){
+    float3 z = p;
     
     {
         const float exBR = 1.5;
@@ -111,14 +120,22 @@ float sdMandelbulb3D(float3 p, int mandelIterations){
             fr = min(0.5*log(r)*r/dr, length(p)-.72);
             break;
         }
-        theta=acos(z.z/r)+_Time.y/10.;
-        phi = atan2(z.y,z.x);
-        dr = pow(r,7.)*7.*dr+1.;
+        // convert to polar coordinate
+        theta=acos(z.z/r);
         
+        phi = atan2(z.y,z.x);
+        
+        dr = pow(r,7.)*7.*dr+1.;
+        if(animateMandel==1){
+            theta+=(cos(_Time.y*.1));
+            phi+=(sin(_Time.y*.2));
+        }
+        // scale and rotate the point
         zr = pow(r,pw);
         theta = theta*pw;
         phi = phi*pw;
         
+        // convert back to cartesian coordinates
         z=zr*float3(sin(theta)*cos(phi),
                   sin(phi)*sin(theta),
                   cos(theta))+p;

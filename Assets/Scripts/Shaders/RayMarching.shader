@@ -55,14 +55,15 @@ Shader "Fractals/RayMarching"
             
             //paxis
             uniform int showPaxis;
+            uniform int animatePaxis;
             uniform fixed4 paxisColor;
             uniform float3 paxisPos;
             uniform int paxisIter1, paxisIter2, paxisIter1Swap, paxisIter2Swap;
-            uniform float paxisMult;
+            uniform float paxisMult, paxisScale;
             
             //mandelbulb
-            uniform int showMandel;
-            //uniform fixed4 mandelColor;
+            uniform int showMandel, animateMandel, mandelDynamicColor;
+            uniform fixed4 mandelStaticColor;
             uniform float3 mandelPos;
             uniform int mandelIter;
             
@@ -98,18 +99,21 @@ Shader "Fractals/RayMarching"
             }
             
             float4 distanceField(float3 pos){
+                float4 combine=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));;
                 if(showMandel==1){
-                    float4 mandel=float4(float3(0,0,0), sdMandelbulb3D(pos-mandelPos.xyz, mandelIter));
-                    return mandel;
+                    float4 mandel=float4(mandelStaticColor.rgb, sdMandelbulb3D(pos-mandelPos.xyz, mandelIter, animateMandel));
+                    //combine=float4(mandelStaticColor.rgb, sdMandelbulb3D(pos-mandelPos.xyz, mandelIter, animateMandel));
+                    //return mandel;
+                    combine=opUS(combine, mandel, shapeBlending);
                 }
             
-                float4 combine=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));
+                //combine=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));
                 if(showTetra==1){
                     float4 tetra=float4(tetraColor.rgb, sdTetrahedron(pos-tetraPos.xyz, tetraIterations,tetraScale));
                     combine=opUS(combine, tetra, shapeBlending);
                 }
                 if(showPaxis==1){
-                    float4 paxis=float4(paxisColor.rgb, sdPaxis(pos-paxisPos.xyz, paxisIter1, paxisIter2, paxisMult, paxisIter1Swap, paxisIter2Swap));
+                    float4 paxis=float4(paxisColor.rgb, sdPaxis(pos-paxisPos.xyz, paxisIter1, paxisIter2, paxisMult, paxisIter1Swap==0, paxisIter2Swap==0, paxisScale, animatePaxis==1));
                     combine= opUS(combine, paxis, shapeBlending);
                 }
              
@@ -213,9 +217,12 @@ Shader "Fractals/RayMarching"
                     
                       //check for hit in distance field
                     float4 d=distanceField(pos);
-                    g+=0.1/(0.1+d.w*d.w);
+                    
+                    if(mandelDynamicColor==1 && showMandel==1)
+                        g+=0.1/(0.1+d.w*d.w);
+                    
                     if(d.w<ACCURACY){//the ray has hit something
-                        if(showMandel==1){
+                        if(mandelDynamicColor==1 && showMandel==1){
                             float3 col=mandelColor(rayOrigin, rayDirection, t);
                             dColor=fixed3(col.rgb);                  
                         }else
