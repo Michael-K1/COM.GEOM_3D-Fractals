@@ -316,35 +316,41 @@ MonoBehaviour:
   ACCURACY: 0.001
   groundColor: {r: 1, g: 1, b: 1, a: 0}
   colorIntensity: 1
-  shapeBlending: 0.1
+  shapeBlending: 0.4
   directionalLight: {fileID: 705507995}
   lightColor: {r: 1, g: 1, b: 1, a: 0}
   lightIntensity: 1
   shadowIntensity: 1.19
   shadowPenumbra: 41.1
   shadowDistance: {x: 0.1, y: 100}
-  aoStepSize: 1.4
+  aoStepSize: 0.81
   aoIteration: 2
   aoIntensity: 0.125
   showTetra: 1
-  tetrahedronPos: {x: 1.2, y: 2.53, z: 0.18}
-  tetraIterations: 27
+  tetrahedronPos: {x: 0.89, y: 2.53, z: 0.18}
+  tetraIterations: 24
   tetraScale: 2.5
   tetraColor: {r: 1, g: 1, b: 0, a: 0}
-  showPaxis: 1
+  showPaxis: 0
   paxisPos: {x: -3.9, y: 1, z: 0}
   paxisColor: {r: 0, g: 1, b: 1, a: 0}
   paxisSwapA: 1
-  paxisSwapB: 1
+  paxisSwapB: 0
+  animatePaxis: 0
   paxisIter1: 3
   paxisIter2: 20
   paxisMult: 0.29
+  paxisScale: 1
+  showMandel: 0
   mandelColor: {r: 1, g: 1, b: 1, a: 0}
-  showMandel: 1
   animateMandel: 1
   mandelDynamicColor: 0
-  mandelPos: {x: 0, y: 1.17, z: 0}
+  mandelPos: {x: -1.41, y: 4.22, z: 0}
   mandelIter: 10
+  showMengerSponge: 1
+  spongeColor: {r: 1, g: 0, b: 0, a: 0}
+  spongePos: {x: 0.91, y: 4.69, z: 0.16}
+  spongeIter: 6
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0

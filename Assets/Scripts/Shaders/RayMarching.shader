@@ -46,17 +46,17 @@ Shader "Fractals/RayMarching"
             uniform fixed4 groundColor;
             uniform float shapeBlending;
             
-            //tetrahedron
+            //Sierpinski tetrahedron
             uniform int showTetra;
+            uniform fixed4 tetraColor;
             uniform float3 tetraPos;
             uniform float tetraScale;
             uniform int tetraIterations;
-            uniform fixed4 tetraColor;
             
             //paxis
             uniform int showPaxis;
-            uniform int animatePaxis;
             uniform fixed4 paxisColor;
+            uniform int animatePaxis;
             uniform float3 paxisPos;
             uniform int paxisIter1, paxisIter2, paxisIter1Swap, paxisIter2Swap;
             uniform float paxisMult, paxisScale;
@@ -67,6 +67,11 @@ Shader "Fractals/RayMarching"
             uniform float3 mandelPos;
             uniform int mandelIter;
             
+            //Menger sponge
+            uniform int showSponge;
+            uniform fixed4 spongeColor; 
+            uniform float3 spongePos;
+            uniform int spongeIterations;
             
             struct appdata
             {
@@ -106,8 +111,12 @@ Shader "Fractals/RayMarching"
                     //return mandel;
                     combine=opUS(combine, mandel, shapeBlending);
                 }
-            
-                //combine=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));
+                
+                if(showSponge==1){
+                    float4 sponge=float4(spongeColor.rgb, sdSponge(pos-spongePos.xyz, spongeIterations));
+                    combine=opUS(combine, sponge, shapeBlending);
+                }
+                
                 if(showTetra==1){
                     float4 tetra=float4(tetraColor.rgb, sdTetrahedron(pos-tetraPos.xyz, tetraIterations,tetraScale));
                     combine=opUS(combine, tetra, shapeBlending);

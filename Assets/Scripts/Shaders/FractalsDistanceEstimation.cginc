@@ -7,8 +7,8 @@ float sdPlane(float3 p, float4 n){
 }
 
 // FRACTALS //
-//recursive Tetrahedron
-float sdTetrahedron(float3 pos, int iterations, float scale){
+//Sierpinski Tetrahedron
+float sdTetrahedron(float3 pos, int tetraIterations, float scale){
     //scale=scale *(abs(cos(_Time.y*.1)));
     float3 a1=float3(  0,  0.5, 0) * scale;
     float3 a2=float3(  0, -1,  1 ) * scale;
@@ -17,8 +17,8 @@ float sdTetrahedron(float3 pos, int iterations, float scale){
     
     float3 c;
     float dist, d;
-    int i;
-    for(i=0; i <iterations; i++){
+    
+    for(int i=0; i <tetraIterations; i++){
         c=a1;
         dist=length(pos-a1);
         
@@ -41,7 +41,7 @@ float sdTetrahedron(float3 pos, int iterations, float scale){
         }
         pos=2.0*pos - c;      
     }
-    return length(pos)*pow(2.0, float(-i));
+    return length(pos)*pow(2.0, float(-tetraIterations));
 }
 
 //paxis
@@ -98,8 +98,6 @@ float sdPaxis(float3 pos, int iter1, int iter2, float mult, bool iter1Swap, bool
     return max(d2,-d);
 }
 
-
-
 //Mandelbulb3D
 float sdMandelbulb3D(float3 p, int mandelIterations, int animateMandel){
     float3 z = p;
@@ -142,4 +140,19 @@ float sdMandelbulb3D(float3 p, int mandelIterations, int animateMandel){
     }
     
     return fr;
+}
+
+//Menger Sponge
+float sdSponge(float3 z, int spongeIterations){
+    for (int i=0;i<spongeIterations;i++){
+        z=abs(z);
+        z.xy = (z.x < z.y) ? z.yx : z.xy;
+        z.xz = (z.x < z.z) ? z.zx : z.xz;
+        z.zy = (z.y < z.z) ? z.yz : z.zy;
+        z=z*3-2;
+        z.z+=(z.z<-1)?2:0;
+    }
+    z=abs(z)-float3(1,1,1);
+    float dis=min(max(z.x, max(z.y, z.z)), 0.0) + length(max(z, 0.0)); 
+    return dis*.6*pow(3, -float(spongeIterations));
 }

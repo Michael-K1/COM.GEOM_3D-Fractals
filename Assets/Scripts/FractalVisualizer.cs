@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using static  ShaderLookup;
 [RequireComponent(typeof(Camera))]
 [ExecuteInEditMode]
 [ImageEffectAllowedInSceneView]
@@ -72,11 +72,11 @@ public class FractalVisualizer : MonoBehaviour{
     #region Fractals Parameter
 
     //[Header("Signed Distance Field"),Space] //here are the parameters for the fractals
-
-    [Header("Tetrahedron")] 
+    
+    [Header("Sierpinski Tetrahedron")] 
     public bool showTetra;
     public Vector3 tetrahedronPos;
-    [Range(1, 50)]
+    [Range(1, 25)]
     public int tetraIterations;
     [Range(1.00001f, 2.50000f)]
     public float tetraScale;
@@ -97,83 +97,98 @@ public class FractalVisualizer : MonoBehaviour{
     public float paxisScale;
 
     [Header("MandelBulb3D")] 
+    public bool showMandel;
     public Color mandelColor;
-    public bool showMandel, animateMandel, mandelDynamicColor;
+    public bool  animateMandel, mandelDynamicColor;
     public Vector3 mandelPos;
     [Range(1, 10)] 
     public int mandelIter;
-    
-    #endregion
 
+    [Header("Menger Sponge")] 
+    public bool showMengerSponge;
+    public Color spongeColor;
+    public Vector3 spongePos;
+    [Range(0,6)]
+    public int spongeIter;
+
+
+
+    #endregion
+    
     private void OnRenderImage(RenderTexture src, RenderTexture dest){
         if (!RayMarchMaterial){
             Graphics.Blit(src,dest);
             return;
-            
         }
 /*
         if (showMandel)
             showTetra = showPaxis = !showMandel;
         */
         //view setup
-        RayMarchMaterial.SetMatrix("CamFrustum",CamFrustum(ThisCamera));
-        RayMarchMaterial.SetMatrix("CamToWorld", ThisCamera.cameraToWorldMatrix);
+        RayMarchMaterial.SetMatrix(Frustum,CamFrustum(ThisCamera));
+        RayMarchMaterial.SetMatrix(CamToWorld, ThisCamera.cameraToWorldMatrix);
         
         //raymarch setup
-        RayMarchMaterial.SetInt("maxRaySteps", MAX_STEPS);
-        RayMarchMaterial.SetFloat("maxRayDistance", MAX_DISTANCE);
-        RayMarchMaterial.SetFloat("ACCURACY", ACCURACY);
-        RayMarchMaterial.SetInt("randomColor", showMandel?1:0);
+        RayMarchMaterial.SetInt(MaxRaySteps, MAX_STEPS);
+        RayMarchMaterial.SetFloat(MaxRayDistance, MAX_DISTANCE);
+        RayMarchMaterial.SetFloat(Accuracy, ACCURACY);
+        
         
         //LIGHTING
-        RayMarchMaterial.SetVector("_LightDir", directionalLight?directionalLight.forward: Vector3.down);
-        RayMarchMaterial.SetColor("_LightColor",lightColor);
-        RayMarchMaterial.SetFloat("_LightIntensity",lightIntensity);
+        RayMarchMaterial.SetVector(LightDir, directionalLight?directionalLight.forward: Vector3.down);
+        RayMarchMaterial.SetColor(LightColor,lightColor);
+        RayMarchMaterial.SetFloat(LightIntensity,lightIntensity);
         
         //shadows
-        RayMarchMaterial.SetFloat("_ShadowIntensity", shadowIntensity);
-        RayMarchMaterial.SetFloat("_ShadowPenumbra", shadowPenumbra);
-        RayMarchMaterial.SetVector("_ShadowDistance", shadowDistance);
+        RayMarchMaterial.SetFloat(ShadowIntensity, shadowIntensity);
+        RayMarchMaterial.SetFloat(ShadowPenumbra, shadowPenumbra);
+        RayMarchMaterial.SetVector(ShadowDistance, shadowDistance);
         
         //Ambient Occlusion
-        RayMarchMaterial.SetFloat("_AOStepSize", aoStepSize);
-        RayMarchMaterial.SetFloat("_AOIntensity", aoIntensity);
-        RayMarchMaterial.SetInt("_AOIteration", aoIteration);
+        RayMarchMaterial.SetFloat(AoStepSize, aoStepSize);
+        RayMarchMaterial.SetFloat(AoIntensity, aoIntensity);
+        RayMarchMaterial.SetInt(AoIteration, aoIteration);
         
         //Environment
-        RayMarchMaterial.SetColor("groundColor", groundColor);
-        RayMarchMaterial.SetFloat("_ColorIntensity", colorIntensity );
-        RayMarchMaterial.SetFloat("shapeBlending", shapeBlending );
+        RayMarchMaterial.SetColor(GroundColor, groundColor);
+        RayMarchMaterial.SetFloat(ColorIntensity, colorIntensity );
+        RayMarchMaterial.SetFloat(ShapeBlending, shapeBlending );
         
-        //TETRAHEDRON
-        RayMarchMaterial.SetInt("showTetra", showTetra?1:0);
-        RayMarchMaterial.SetVector("tetraPos",tetrahedronPos);
-        RayMarchMaterial.SetFloat("tetraScale", tetraScale);
-        RayMarchMaterial.SetInt("tetraIterations", tetraIterations);
-        RayMarchMaterial.SetColor("tetraColor",tetraColor);
+        //Sierpinski TETRAHEDRON
+        RayMarchMaterial.SetInt(ShowTetra, showTetra?1:0);
+        RayMarchMaterial.SetVector(TetraPos,tetrahedronPos);
+        RayMarchMaterial.SetFloat(TetraScale, tetraScale);
+        RayMarchMaterial.SetInt(TetraIterations, tetraIterations);
+        RayMarchMaterial.SetColor(TetraColor,tetraColor);
         
         //PAXIS
-        RayMarchMaterial.SetInt("showPaxis", showPaxis?1:0);
-        RayMarchMaterial.SetVector("paxisPos", paxisPos);
-        RayMarchMaterial.SetColor("paxisColor", paxisColor);
-        RayMarchMaterial.SetFloat("paxisMult", paxisMult);
-        RayMarchMaterial.SetFloat("paxisScale", paxisScale);
-        RayMarchMaterial.SetInt("paxisIter1", paxisSwapB ? Mathf.Clamp(paxisIter1,1,2): paxisIter1);
-        RayMarchMaterial.SetInt("paxisIter2", paxisIter2);
-        RayMarchMaterial.SetInt("paxisIter1Swap", paxisSwapA ? 1 : 0);
-        RayMarchMaterial.SetInt("paxisIter2Swap", paxisSwapB? 1 : 0);
-        RayMarchMaterial.SetInt("animatePaxis", animatePaxis? 1 : 0);
+        RayMarchMaterial.SetInt(ShowPaxis, showPaxis?1:0);
+        RayMarchMaterial.SetVector(PaxisPos, paxisPos);
+        RayMarchMaterial.SetColor(PaxisColor, paxisColor);
+        RayMarchMaterial.SetFloat(PaxisMult, paxisMult);
+        RayMarchMaterial.SetFloat(PaxisScale, paxisScale);
+        RayMarchMaterial.SetInt(PaxisIter1, paxisSwapB ? Mathf.Clamp(paxisIter1,1,2): paxisIter1);
+        RayMarchMaterial.SetInt(PaxisIter2, paxisIter2);
+        RayMarchMaterial.SetInt(PaxisIter1Swap, paxisSwapA ? 1 : 0);
+        RayMarchMaterial.SetInt(PaxisIter2Swap, paxisSwapB? 1 : 0);
+        RayMarchMaterial.SetInt(AnimatePaxis, animatePaxis? 1 : 0);
 
         //MANDELBULB
-        RayMarchMaterial.SetVector("mandelPos", mandelPos);
-        RayMarchMaterial.SetInt("showMandel", showMandel?1:0);
-        RayMarchMaterial.SetInt("animateMandel", animateMandel?1:0);
-        RayMarchMaterial.SetInt("mandelDynamicColor", mandelDynamicColor?1:0);
-        RayMarchMaterial.SetColor("mandelStaticColor", mandelColor);
-        RayMarchMaterial.SetInt("mandelIter", mandelIter);
+        RayMarchMaterial.SetVector(MandelPos, mandelPos);
+        RayMarchMaterial.SetInt(ShowMandel, showMandel?1:0);
+        RayMarchMaterial.SetInt(AnimateMandel, animateMandel?1:0);
+        RayMarchMaterial.SetInt(MandelDynamicColor, mandelDynamicColor?1:0);
+        RayMarchMaterial.SetColor(MandelStaticColor, mandelColor);
+        RayMarchMaterial.SetInt(MandelIter, mandelIter);
+        
+        //MENGER SPONGE
+        RayMarchMaterial.SetInt(ShowSponge,showMengerSponge?1:0);
+        RayMarchMaterial.SetVector(SpongePos,spongePos);
+        RayMarchMaterial.SetColor(SpongeColor, spongeColor);
+        RayMarchMaterial.SetInt(SpongeIterations,spongeIter);
         
         RenderTexture.active = dest;
-        RayMarchMaterial.SetTexture("_MainTex", src);
+        RayMarchMaterial.SetTexture(MainTex, src);
         
         GL.PushMatrix();
         GL.LoadOrtho();
