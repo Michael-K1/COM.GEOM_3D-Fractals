@@ -156,3 +156,39 @@ float sdSponge(float3 z, int spongeIterations){
     float dis=min(max(z.x, max(z.y, z.z)), 0.0) + length(max(z, 0.0)); 
     return dis*.6*pow(3, -float(spongeIterations));
 }
+
+//MandelBOX
+void sphereFold(inout float3 p, inout float dz, float minRad, float fixRad){
+    float r2= dot(p,p);
+ 
+    if(r2<minRad){// linear inner scaling
+        float tmp=fixRad/minRad;
+        p*=tmp;
+        dz*=tmp;
+    }
+    else if(r2<fixRad){// this is the actual sphere inversion
+        float tmp=fixRad/r2;
+        p*=tmp;
+        dz*=tmp;
+    }
+}
+void boxFold(inout float3 p, float size){
+    p=clamp(p,-size, size)*2 - p;
+}
+float sdMandelBox(float3 p, int mboxIterations, float mboxScale, bool animateBox, float mboxSize, float minRadius, float fixedRadius){
+    float3 offset=p;
+    float dr=1;
+    
+    
+    for(int i=0;i<mboxIterations;i++){
+        boxFold(p, mboxSize);       // Reflect
+        sphereFold(p,dr, minRadius, fixedRadius);   // Sphere Inversion
+        if(animateBox)
+            mboxScale=2+abs(sin(_Time.y*.2));    
+        
+        p=mboxScale*p+offset;   // Scale & Translate
+        dr= dr*abs(mboxScale)+1;
+    }
+    
+    return length(p)/abs(dr);
+}

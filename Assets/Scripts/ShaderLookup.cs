@@ -47,7 +47,7 @@ public static class ShaderLookup{
     
     //MANDELBULB
     public static readonly int MandelPos = Shader.PropertyToID("mandelPos");
-    public static readonly int ShowMandel = Shader.PropertyToID("showMandel");
+    public static readonly int ShowMandelBulb = Shader.PropertyToID("showMandelBulb");
     public static readonly int AnimateMandel = Shader.PropertyToID("animateMandel");
     public static readonly int MandelDynamicColor = Shader.PropertyToID("mandelDynamicColor");
     public static readonly int MandelStaticColor = Shader.PropertyToID("mandelStaticColor");

@@ -14,7 +14,7 @@ Shader "Fractals/RayMarching"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma target 5.0
+            #pragma target 3.0
 
             #include "UnityCG.cginc"
             #include "FractalsDistanceEstimation.cginc"
@@ -61,8 +61,8 @@ Shader "Fractals/RayMarching"
             uniform int paxisIter1, paxisIter2, paxisIter1Swap, paxisIter2Swap;
             uniform float paxisMult, paxisScale;
             
-            //mandelbulb
-            uniform int showMandel, animateMandel, mandelDynamicColor;
+            //mandelBULB
+            uniform int showMandelBulb, animateMandel, mandelDynamicColor;
             uniform fixed4 mandelStaticColor;
             uniform float3 mandelPos;
             uniform int mandelIter;
@@ -72,6 +72,13 @@ Shader "Fractals/RayMarching"
             uniform fixed4 spongeColor; 
             uniform float3 spongePos;
             uniform int spongeIterations;
+            
+            //MandelBOX
+            uniform int showMandelBox, animateMandelBox;
+            uniform fixed4 mandelBoxColor;
+            uniform float3 mandelBoxPos;
+            uniform int mandelBoxIter;
+            uniform float mandelBoxMinRadius, mandelBoxFixedRadius, mandelBoxScale, mandelBoxSize;
             
             struct appdata
             {
@@ -105,17 +112,6 @@ Shader "Fractals/RayMarching"
             
             float4 distanceField(float3 pos){
                 float4 combine=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));;
-                if(showMandel==1){
-                    float4 mandel=float4(mandelStaticColor.rgb, sdMandelbulb3D(pos-mandelPos.xyz, mandelIter, animateMandel));
-                    //combine=float4(mandelStaticColor.rgb, sdMandelbulb3D(pos-mandelPos.xyz, mandelIter, animateMandel));
-                    //return mandel;
-                    combine=opUS(combine, mandel, shapeBlending);
-                }
-                
-                if(showSponge==1){
-                    float4 sponge=float4(spongeColor.rgb, sdSponge(pos-spongePos.xyz, spongeIterations));
-                    combine=opUS(combine, sponge, shapeBlending);
-                }
                 
                 if(showTetra==1){
                     float4 tetra=float4(tetraColor.rgb, sdTetrahedron(pos-tetraPos.xyz, tetraIterations,tetraScale));
@@ -126,6 +122,20 @@ Shader "Fractals/RayMarching"
                     combine= opUS(combine, paxis, shapeBlending);
                 }
              
+                if(showMandelBulb==1){
+                    float4 mandel=float4(mandelStaticColor.rgb, sdMandelbulb3D(pos-mandelPos.xyz, mandelIter, animateMandel));
+                    combine=opUS(combine, mandel, shapeBlending);
+                }
+                
+                if(showSponge==1){
+                    float4 sponge=float4(spongeColor.rgb, sdSponge(pos-spongePos.xyz, spongeIterations));
+                    combine=opUS(combine, sponge, shapeBlending);
+                }
+                
+                if(showMandelBox==1){
+                    float4 mBox=float4(mandelBoxColor.rgb, sdMandelBox(pos- mandelBoxPos.xyz, mandelBoxIter, mandelBoxScale, animateMandelBox==1, mandelBoxSize, mandelBoxMinRadius, mandelBoxFixedRadius));
+                    combine=opUS(combine, mBox, shapeBlending);
+                }
                 return combine;
                 
             }
@@ -227,11 +237,11 @@ Shader "Fractals/RayMarching"
                       //check for hit in distance field
                     float4 d=distanceField(pos);
                     
-                    if(mandelDynamicColor==1 && showMandel==1)
+                    if(mandelDynamicColor==1 && showMandelBulb==1)
                         g+=0.1/(0.1+d.w*d.w);
                     
                     if(d.w<ACCURACY){//the ray has hit something
-                        if(mandelDynamicColor==1 && showMandel==1){
+                        if(mandelDynamicColor==1 && showMandelBulb==1){
                             float3 col=mandelColor(rayOrigin, rayDirection, t);
                             dColor=fixed3(col.rgb);                  
                         }else
