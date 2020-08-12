@@ -52,11 +52,25 @@ public static class ShaderLookup{
     public static readonly int MandelDynamicColor = Shader.PropertyToID("mandelDynamicColor");
     public static readonly int MandelStaticColor = Shader.PropertyToID("mandelStaticColor");
     public static readonly int MandelIter = Shader.PropertyToID("mandelIter");
+    public static readonly int RotateMandelBulb = Shader.PropertyToID("rotateMandelBulb");
+    public static readonly int AlternativeMandelBulb = Shader.PropertyToID("alternativeMandelBulb");
     
     //MENGER SPONGE
     public static readonly int ShowSponge = Shader.PropertyToID("showSponge");
     public static readonly int SpongePos = Shader.PropertyToID("spongePos");
     public static readonly int SpongeColor = Shader.PropertyToID("spongeColor");
     public static readonly int SpongeIterations = Shader.PropertyToID("spongeIterations");
+    
+    //MANDELBOX
+    public static readonly int ShowMandelBox = Shader.PropertyToID("showMandelBox");
+    public static readonly int AnimateMandelBox = Shader.PropertyToID("animateMandelBox");
+    public static readonly int MandelBoxColor = Shader.PropertyToID("mandelBoxColor");
+    public static readonly int MandelBoxPos = Shader.PropertyToID("mandelBoxPos");
+    public static readonly int MandelBoxIter = Shader.PropertyToID("mandelBoxIter");
+    public static readonly int MandelBoxScale = Shader.PropertyToID("mandelBoxScale");
+    public static readonly int MandelBoxSize = Shader.PropertyToID("mandelBoxSize");
+    public static readonly int MandelBoxMinRadius = Shader.PropertyToID("mandelBoxMinRadius");
+    public static readonly int MandelBoxFixedRadius = Shader.PropertyToID("mandelBoxFixedRadius");
+
     
 }

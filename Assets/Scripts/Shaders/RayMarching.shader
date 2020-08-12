@@ -62,7 +62,7 @@ Shader "Fractals/RayMarching"
             uniform float paxisMult, paxisScale;
             
             //mandelBULB
-            uniform int showMandelBulb, animateMandel, mandelDynamicColor;
+            uniform int showMandelBulb, animateMandel, rotateMandelBulb, alternativeMandelBulb;
             uniform fixed4 mandelStaticColor;
             uniform float3 mandelPos;
             uniform int mandelIter;
@@ -123,7 +123,7 @@ Shader "Fractals/RayMarching"
                 }
              
                 if(showMandelBulb==1){
-                    float4 mandel=float4(mandelStaticColor.rgb, sdMandelbulb3D(pos-mandelPos.xyz, mandelIter, animateMandel));
+                    float4 mandel=float4(mandelStaticColor.rgb, sdMandelbulb3D(pos-mandelPos.xyz, mandelIter, animateMandel==1, rotateMandelBulb==1, alternativeMandelBulb==1 ));
                     combine=opUS(combine, mandel, shapeBlending);
                 }
                 
@@ -199,7 +199,19 @@ Shader "Fractals/RayMarching"
                 
                 return result;
             }
-            float g=0;
+            
+            /*float3 shading2(float3 rayO, float3 pos){
+                float3 color, mat;
+                float3 n=getNormal(pos);
+                
+                mat=hsv2rgb(float3(dot(rayO, rayO),1,1));
+                
+                float shadow=SoftShadow(pos, -_LightDir, _ShadowDistance.x, _ShadowDistance.y, _ShadowPenumbra) * 0.5+0.5;
+                shadow=max(0.0, pow(shadow, _ShadowIntensity));
+                float ao=AmbientOcclusion(pos, n);
+                
+            }*/
+            /*float g=0;
             float3 mandelColor(float3 ro, float3 rd, float r){
                 float3 c = float3(0,0,0);
                 float3 cs = 0.5 + 0.5*cos(_Time.y+rd.xyx+float3(0,2,4));
@@ -220,7 +232,7 @@ Shader "Fractals/RayMarching"
                 
                 
                 return c+(g/75.*cs);
-            }
+            }*/
             
             bool RayMarching(float3 rayOrigin, float3 rayDirection, float depth, float maxRayDist, int maxIteration, inout float3 pos, inout fixed3 dColor){
                 bool hit;
@@ -236,15 +248,15 @@ Shader "Fractals/RayMarching"
                     
                       //check for hit in distance field
                     float4 d=distanceField(pos);
-                    
+                    /*
                     if(mandelDynamicColor==1 && showMandelBulb==1)
                         g+=0.1/(0.1+d.w*d.w);
-                    
+                    */
                     if(d.w<ACCURACY){//the ray has hit something
-                        if(mandelDynamicColor==1 && showMandelBulb==1){
+                      /*  if(mandelDynamicColor==1 && showMandelBulb==1){
                             float3 col=mandelColor(rayOrigin, rayDirection, t);
                             dColor=fixed3(col.rgb);                  
-                        }else
+                        }else*/
                             dColor=d.rgb;
                         hit= true;
                         break;

@@ -81,7 +81,7 @@ float sdPaxis(float3 pos, int iter1, int iter2, float mult, bool iter1Swap, bool
         
         b*=0.5;
     }
-    float d=length(pos)-mult;   //0.1<=mult<=0.3
+    float d=length(pos)-mult;  
     
     for (i=0; i<iter2;i++){
         if(iter2Swap)
@@ -99,7 +99,7 @@ float sdPaxis(float3 pos, int iter1, int iter2, float mult, bool iter1Swap, bool
 }
 
 //Mandelbulb3D
-float sdMandelbulb3D(float3 p, int mandelIterations, int animateMandel){
+float sdMandelbulb3D(float3 p, int mandelIterations, bool animateMandel, bool rotate, bool alternative){
     float3 z = p;
     
     {
@@ -124,19 +124,28 @@ float sdMandelbulb3D(float3 p, int mandelIterations, int animateMandel){
         phi = atan2(z.y,z.x);
         
         dr = pow(r,7.)*7.*dr+1.;
-        if(animateMandel==1){
+        
+        if(animateMandel)
             theta+=(cos(_Time.y*.1));
-            phi+=(sin(_Time.y*.2));
-        }
+
+        if(rotate)
+            phi+=(_Time.y*.2);
+            
         // scale and rotate the point
         zr = pow(r,pw);
         theta = theta*pw;
         phi = phi*pw;
         
         // convert back to cartesian coordinates
-        z=zr*float3(sin(theta)*cos(phi),
+        if(alternative)
+            z=zr*float3(cos(theta)*cos(phi),
+                      sin(phi)*cos(theta),
+                      sin(theta))+p;
+        else
+            z=zr*float3(sin(theta)*cos(phi),
                   sin(phi)*sin(theta),
                   cos(theta))+p;
+        
     }
     
     return fr;
@@ -184,8 +193,8 @@ float sdMandelBox(float3 p, int mboxIterations, float mboxScale, bool animateBox
         boxFold(p, mboxSize);       // Reflect
         sphereFold(p,dr, minRadius, fixedRadius);   // Sphere Inversion
         if(animateBox)
-            mboxScale=2+abs(sin(_Time.y*.2));    
-        
+            mboxScale*=(sin(_Time.y*.1));    
+                    
         p=mboxScale*p+offset;   // Scale & Translate
         dr= dr*abs(mboxScale)+1;
     }

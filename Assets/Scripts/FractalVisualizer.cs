@@ -99,7 +99,7 @@ public class FractalVisualizer : MonoBehaviour{
     [Header("MandelBulb3D")] 
     public bool showMandelBulb;
     public Color mandelColor;
-    public bool  animateMandel, mandelDynamicColor;
+    public bool  animateMandel, rotateMandelBulb,alternativeMandelBulb,mandelDynamicColor;
     public Vector3 mandelPos;
     [Range(1, 10)] 
     public int mandelIter;
@@ -126,6 +126,8 @@ public class FractalVisualizer : MonoBehaviour{
     public float mandelBoxMinRadius=.5f;
     [Range(2f,5f)]
     public float mandelBoxFixedRadius=.5f;
+
+
 
     #endregion
     
@@ -191,6 +193,8 @@ public class FractalVisualizer : MonoBehaviour{
         RayMarchMaterial.SetVector(MandelPos, mandelPos);
         RayMarchMaterial.SetInt(ShowMandelBulb, showMandelBulb?1:0);
         RayMarchMaterial.SetInt(AnimateMandel, animateMandel?1:0);
+        RayMarchMaterial.SetInt(RotateMandelBulb, rotateMandelBulb?1:0);
+        RayMarchMaterial.SetInt(AlternativeMandelBulb, alternativeMandelBulb?1:0);
         RayMarchMaterial.SetInt(MandelDynamicColor, mandelDynamicColor?1:0);
         RayMarchMaterial.SetColor(MandelStaticColor, mandelColor);
         RayMarchMaterial.SetInt(MandelIter, mandelIter);
@@ -202,15 +206,15 @@ public class FractalVisualizer : MonoBehaviour{
         RayMarchMaterial.SetInt(SpongeIterations,spongeIter);
         
         //MANDELBOX
-        RayMarchMaterial.SetInt("showMandelBox",showMandelBox?1:0);
-        RayMarchMaterial.SetInt("animateMandelBox",animateMandelBox?1:0);
-        RayMarchMaterial.SetColor("mandelBoxColor",mandelBoxColor);
-        RayMarchMaterial.SetVector("mandelBoxPos",mandelBoxPos);
-        RayMarchMaterial.SetInt("mandelBoxIter",mandelBoxIter);
-        RayMarchMaterial.SetFloat("mandelBoxScale", mandelBoxScale);
-        RayMarchMaterial.SetFloat("mandelBoxSize", mandelBoxSize);
-        RayMarchMaterial.SetFloat("mandelBoxMinRadius", mandelBoxMinRadius);
-        RayMarchMaterial.SetFloat("mandelBoxFixedRadius", mandelBoxFixedRadius);
+        RayMarchMaterial.SetInt(ShowMandelBox,showMandelBox?1:0);
+        RayMarchMaterial.SetInt(AnimateMandelBox,animateMandelBox?1:0);
+        RayMarchMaterial.SetColor(MandelBoxColor,mandelBoxColor);
+        RayMarchMaterial.SetVector(MandelBoxPos,mandelBoxPos);
+        RayMarchMaterial.SetInt(MandelBoxIter,mandelBoxIter);
+        RayMarchMaterial.SetFloat(MandelBoxScale, mandelBoxScale);
+        RayMarchMaterial.SetFloat(MandelBoxSize, mandelBoxSize);
+        RayMarchMaterial.SetFloat(MandelBoxMinRadius, mandelBoxMinRadius);
+        RayMarchMaterial.SetFloat(MandelBoxFixedRadius, mandelBoxFixedRadius);
         
         RenderTexture.active = dest;
         RayMarchMaterial.SetTexture(MainTex, src);
