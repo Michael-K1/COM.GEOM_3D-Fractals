@@ -10,21 +10,20 @@ public class TetraHUD : FractalHUD{
     private void Start(){
         
         showFractal.isOn = Fv.showTetra;
-        posX.value = Fv.tetrahedronPos.x;
-        posY.value = Fv.tetrahedronPos.y;
-        posZ.value = Fv.tetrahedronPos.z;
+        
         tetraIterations.value = Fv.tetraIterations;
         tetraScale.value = Fv.tetraScale;
-        fractalColor.SetUp(Fv.tetraColor);
+        FractalColor.SetUp(Fv.tetraColor);
+        FractalPos.SetUpPosition(Fv.tetrahedronPos);
     }
 
     private void LateUpdate(){
         Fv.showTetra = showFractal.isOn;
-        Fv.tetrahedronPos.x = posX.value;
-        Fv.tetrahedronPos.y = posY.value;
-        Fv.tetrahedronPos.z = posZ.value;
+
         Fv.tetraIterations =(int) tetraIterations.value;
         Fv.tetraScale = tetraScale.value;
-
+        
+        FractalColor.UpdateColor(ref Fv.tetraColor);
+        FractalPos.UpdatePosition(ref Fv.tetrahedronPos);
     }
 }

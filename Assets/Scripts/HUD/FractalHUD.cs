@@ -16,7 +16,25 @@ public class FractalHUD : MonoBehaviour{
     }
 
     public Toggle showFractal;
-    public Slider posX, posY, posZ;
-    public ColorHUD fractalColor;
-    
+
+    private ColorHUD fractalColor;
+
+    public ColorHUD FractalColor{
+        get{
+            if (!fractalColor)
+                fractalColor = GetComponentInChildren<ColorHUD>();
+            return fractalColor;
+        } 
+    }
+
+    private PositionHUD fractalPos;
+
+    public PositionHUD FractalPos{
+        get{
+            if (!fractalPos)
+                fractalPos = GetComponentInChildren<PositionHUD>();
+            return fractalPos;
+        }
+    }
+
 }

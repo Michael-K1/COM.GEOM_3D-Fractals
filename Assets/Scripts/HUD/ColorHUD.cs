@@ -15,7 +15,7 @@ public class ColorHUD : MonoBehaviour{
         blue.value = c.b;
     
     }
-    public void SetColor(ref Color c){
+    public void UpdateColor(ref Color c){
         
         c.r = red.value;
         c.g = green.value;

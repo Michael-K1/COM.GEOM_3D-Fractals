@@ -81,13 +81,13 @@ public class EnvironmentHUD : MonoBehaviour{
     }
 
     private void UpdateEnvironment(){
-        groundColor.SetColor(ref fv.groundColor);
+        groundColor.UpdateColor(ref fv.groundColor);
         fv.colorIntensity = colorIntensitySlider.value;
         fv.shapeBlending = shapeBlendingSlider.value;
     }
 
     private void UpdateLighting(){
-        lightColor.SetColor(ref fv.lightColor);
+        lightColor.UpdateColor(ref fv.lightColor);
         fv.lightIntensity = lightIntensity.value;
 
         fv.shadowIntensity = shadowIntensity.value;
