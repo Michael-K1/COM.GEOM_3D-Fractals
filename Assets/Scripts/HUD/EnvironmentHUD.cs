@@ -12,31 +12,52 @@ public class EnvironmentHUD : MonoBehaviour{
     public Slider maxStepsSlider;     
     public TMP_Text maxStepsLabel;    
   
-    public Slider AccuracySlider; 
-    public TMP_Text AccuracyLabel;
+    public Slider accuracySlider; 
+    public TMP_Text accuracyLabel;
     
-    public ColorHUD GroundColor;
-    public Slider ColorIntensitySlider, ShapeBlendingSlider;
+    public ColorHUD groundColor;
+    public Slider colorIntensitySlider, shapeBlendingSlider;
+    
+    [Header("Lighting")]
+    public ColorHUD lightColor;
+    public Slider lightIntensity;
+    
+    [Header("Shadow")]
+    public Slider shadowIntensity;
+    public Slider shadowPenumbra;
 
+    [Header("Ambient Occlusion")] 
+    public Slider AOIntensity;
+    public Slider AOSteps, AOIterations;
     void Start(){
         fv = GetComponentInParent<GlobalHUD>().fv;
         //raymarch
         maxDistanceSlider.value = fv.MAX_DISTANCE;
-        maxDistanceLabel.text = fv.MAX_DISTANCE.ToString();
+        maxDistanceLabel.text = $"Render Distance\t{maxDistanceSlider.value}";
 
         maxStepsSlider.value=fv.MAX_STEPS;
-        maxStepsLabel.text = fv.MAX_STEPS.ToString();
+        maxStepsLabel.text = $"Render Steps\t{maxStepsSlider.value}";
 
-        AccuracySlider.value = fv.ACCURACY;
-        AccuracyLabel.text = fv.ACCURACY.ToString();
+        accuracySlider.value = fv.ACCURACY;
+        accuracyLabel.text = $"Accuracy\t\t{accuracySlider.value}";
 
         //environment
-        GroundColor.SetUp(fv.groundColor);
-        ColorIntensitySlider.value = fv.colorIntensity;
-        ShapeBlendingSlider.value = fv.shapeBlending;
+        groundColor.SetUp(fv.groundColor);
+        colorIntensitySlider.value = fv.colorIntensity;
+        shapeBlendingSlider.value = fv.shapeBlending;
         
         //lighting
-
+        lightColor.SetUp(fv.lightColor);
+        lightIntensity.value = fv.lightIntensity;
+        
+        //shadow
+        shadowIntensity.value = fv.shadowIntensity;
+        shadowPenumbra.value = fv.shadowPenumbra;
+        
+        //AO
+        AOSteps.value = fv.aoStepSize;
+        AOIterations.value = fv.aoIteration;
+        AOIntensity.value = fv.aoIntensity;
     }
     
     private void LateUpdate(){
@@ -55,18 +76,26 @@ public class EnvironmentHUD : MonoBehaviour{
         fv.MAX_STEPS = (int) maxStepsSlider.value;
         maxStepsLabel.text = $"Render Steps\t{maxStepsSlider.value}";
 
-        fv.ACCURACY = AccuracySlider.value;
-        AccuracyLabel.text = $"Accuracy\t\t{AccuracySlider.value}";
+        fv.ACCURACY = accuracySlider.value;
+        accuracyLabel.text = $"Accuracy\t\t{accuracySlider.value}";
     }
 
     private void UpdateEnvironment(){
-        GroundColor.SetColor(ref fv.groundColor);
-        fv.colorIntensity = ColorIntensitySlider.value;
-        fv.shapeBlending = ShapeBlendingSlider.value;
+        groundColor.SetColor(ref fv.groundColor);
+        fv.colorIntensity = colorIntensitySlider.value;
+        fv.shapeBlending = shapeBlendingSlider.value;
     }
 
     private void UpdateLighting(){
-        
+        lightColor.SetColor(ref fv.lightColor);
+        fv.lightIntensity = lightIntensity.value;
+
+        fv.shadowIntensity = shadowIntensity.value;
+        fv.shadowPenumbra = shadowPenumbra.value;
+
+        fv.aoStepSize = AOSteps.value;
+        fv.aoIntensity = AOIntensity.value;
+        fv.aoIteration =(int) AOIterations.value;
         
     }
 }
