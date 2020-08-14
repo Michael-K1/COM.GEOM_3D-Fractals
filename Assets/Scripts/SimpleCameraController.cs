@@ -43,8 +43,10 @@ namespace UnityTemplateProjects
                 z = Mathf.Lerp(z, target.z, positionLerpPct);
             }
 
-            public void UpdateTransform(Transform t)
-            {
+            public void UpdateTransform(Transform t){
+                x = Mathf.Clamp(x, -12f, 12f);
+                y = Mathf.Clamp(y, .1f, 10f);
+                z = Mathf.Clamp(z, -12f, 12f);
                 t.eulerAngles = new Vector3(pitch, yaw, roll);
                 t.position = new Vector3(x, y, z);
             }
