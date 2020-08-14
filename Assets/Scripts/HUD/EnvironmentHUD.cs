@@ -7,11 +7,6 @@ using TMPro;
 public class EnvironmentHUD : MonoBehaviour{
     public FractalVisualizer fv;
     [Header("RayMarching")]
-    public Slider maxDistanceSlider;
-    public TMP_Text maxDistanceLabel;
-    public Slider maxStepsSlider;     
-    public TMP_Text maxStepsLabel;    
-  
     public Slider accuracySlider; 
     public TMP_Text accuracyLabel;
     
@@ -32,12 +27,6 @@ public class EnvironmentHUD : MonoBehaviour{
     void Start(){
         fv = GetComponentInParent<GlobalHUD>().fv;
         //raymarch
-        maxDistanceSlider.value = fv.MAX_DISTANCE;
-        maxDistanceLabel.text = $"Render Distance\t{maxDistanceSlider.value}";
-
-        maxStepsSlider.value=fv.MAX_STEPS;
-        maxStepsLabel.text = $"Render Steps\t{maxStepsSlider.value}";
-
         accuracySlider.value = fv.ACCURACY;
         accuracyLabel.text = $"Accuracy\t\t{accuracySlider.value}";
 
@@ -70,12 +59,6 @@ public class EnvironmentHUD : MonoBehaviour{
 
 
     private void UpdateRaymarch(){
-        fv.MAX_DISTANCE = maxDistanceSlider.value;
-        maxDistanceLabel.text = $"Render Distance\t{maxDistanceSlider.value}";
-
-        fv.MAX_STEPS = (int) maxStepsSlider.value;
-        maxStepsLabel.text = $"Render Steps\t{maxStepsSlider.value}";
-
         fv.ACCURACY = accuracySlider.value;
         accuracyLabel.text = $"Accuracy\t\t{accuracySlider.value}";
     }
