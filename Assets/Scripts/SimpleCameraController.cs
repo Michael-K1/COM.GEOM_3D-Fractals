@@ -44,9 +44,9 @@ namespace UnityTemplateProjects
             }
 
             public void UpdateTransform(Transform t){
-                x = Mathf.Clamp(x, -12f, 12f);
-                y = Mathf.Clamp(y, .1f, 10f);
-                z = Mathf.Clamp(z, -12f, 12f);
+                x = Mathf.Clamp(x, -20f, 20f);
+                y = Mathf.Clamp(y, .1f, 20f);
+                z = Mathf.Clamp(z, -20f, 20f);
                 t.eulerAngles = new Vector3(pitch, yaw, roll);
                 t.position = new Vector3(x, y, z);
             }
