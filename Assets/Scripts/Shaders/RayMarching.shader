@@ -68,7 +68,7 @@ Shader "Fractals/RayMarching"
             uniform int mandelIter;
             
             //Menger sponge
-            uniform int showSponge;
+            uniform int showSponge,animateSponge;
             uniform fixed4 spongeColor; 
             uniform float3 spongePos;
             uniform int spongeIterations;
@@ -128,7 +128,7 @@ Shader "Fractals/RayMarching"
                 }
                 
                 if(showSponge==1){
-                    float4 sponge=float4(spongeColor.rgb, sdSponge(pos-spongePos.xyz, spongeIterations));
+                    float4 sponge=float4(spongeColor.rgb, sdSponge(pos-spongePos.xyz, spongeIterations, animateSponge==1));
                     combine=opUS(combine, sponge, shapeBlending);
                 }
                 

@@ -1,4 +1,5 @@
 ﻿
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,23 +8,24 @@ public class TetraHUD : FractalHUD{
     [Header("Tetrahedron")]
     public Slider tetraIterations;
     public Slider tetraScale;
+    public TMP_Text iter, scale;
     private void Start(){
+        BaseSetup(Fv.showTetra,Fv.tetraColor,Fv.tetrahedronPos);
         
-        showFractal.isOn = Fv.showTetra;
         
         tetraIterations.value = Fv.tetraIterations;
         tetraScale.value = Fv.tetraScale;
-        FractalColor.SetUp(Fv.tetraColor);
-        FractalPos.SetUpPosition(Fv.tetrahedronPos);
+        
     }
 
     private void LateUpdate(){
-        Fv.showTetra = showFractal.isOn;
+        BaseUpdate(ref Fv.showTetra,ref Fv.tetraColor,ref Fv.tetrahedronPos);
 
         Fv.tetraIterations =(int) tetraIterations.value;
         Fv.tetraScale = tetraScale.value;
+        iter.text = $"Iterations\t\t{Fv.tetraIterations}";
+        scale.text = $"Scale\t\t\t{Fv.tetraScale}";
         
-        FractalColor.UpdateColor(ref Fv.tetraColor);
-        FractalPos.UpdatePosition(ref Fv.tetrahedronPos);
+        
     }
 }

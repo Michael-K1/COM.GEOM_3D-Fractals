@@ -37,4 +37,15 @@ public class FractalHUD : MonoBehaviour{
         }
     }
 
+    public void BaseSetup(bool show, Color c, Vector3 v){
+        showFractal.isOn = show;
+        FractalColor.SetUp(c);
+        FractalPos.SetUpPosition(v);
+    }
+
+    public void BaseUpdate(ref bool s, ref Color c, ref Vector3 v){
+        s = showFractal.isOn;
+        FractalColor.UpdateColor(ref c);
+        FractalPos.UpdatePosition(ref v);
+    }
 }

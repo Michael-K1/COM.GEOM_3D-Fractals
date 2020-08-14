@@ -150,9 +150,42 @@ float sdMandelbulb3D(float3 p, int mandelIterations, bool animateMandel, bool ro
     
     return fr;
 }
-
+//Pseudo Klenian
+float sdPKlenian(float3 pos, int pKlenianIter){
+    pos=float3(pos.z, pos.y, pos.x);
+    //float k1, k2, rp2, rq2;
+    float scale = 1.0;
+   // float orb = 0.0001;
+    
+    //float3 q=pos;
+    
+    //float4 _min=float4(-0.8323, -0.694, -0.5045, 0.8067);
+   // float4 _max=float4(0.8579, 1.0883, 0.8937, 0.9411);
+    
+    for(int i=0; i< pKlenianIter; i++){
+       float tmp=.5*pos+.5;
+       pos=-1+2*(tmp-floor(tmp));
+       float r2=dot(pos,pos);
+       float k=1/r2;
+       pos*=k;
+       scale*=k;
+       /* pos=2* clamp(pos, _min, _max)-pos;
+        q=2* ((.5*q+.5)-floor(.5*q+.5))-1;
+        rp2 = dot(pos, pos);
+        rq2 = dot(q, q);
+        k1=max(_min.w/rp2, 1.0);
+        k2=max(_min.w/rq2, 1.0);
+        pos*=k1;
+        q*=k2;
+        scale*=k1;
+        orb=min(orb,rq2);*/
+    }
+    return 0.25*abs(pos.y)/scale;
+    //float lxy=length(pos.xy);
+   // return 0.5 * max(_max.w - lxy, lxy * pos.z / length(pos)) / scale;
+}
 //Menger Sponge
-float sdSponge(float3 z, int spongeIterations){
+float sdSponge(float3 z, int spongeIterations, bool animate){
     for (int i=0;i<spongeIterations;i++){
         z=abs(z);
         z.xy = (z.x < z.y) ? z.yx : z.xy;
@@ -162,6 +195,9 @@ float sdSponge(float3 z, int spongeIterations){
         z.z+=(z.z<-1)?2:0;
     }
     z=abs(z)-float3(1,1,1);
+    if(animate)
+        z+=(sin(_Time.y*0.5));
+   
     float dis=min(max(z.x, max(z.y, z.z)), 0.0) + length(max(z, 0.0)); 
     return dis*.6*pow(3, -float(spongeIterations));
 }

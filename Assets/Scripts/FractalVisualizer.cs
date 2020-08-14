@@ -106,12 +106,13 @@ public class FractalVisualizer : MonoBehaviour{
 
     [Header("Menger Sponge")] 
     public bool showMengerSponge;
+    public bool animateMengerSponge;
     public Color spongeColor;
     public Vector3 spongePos;
     [Range(0,6)]
     public int spongeIter;
 
-    [Header("MandelBulb3D")] 
+    [Header("MandelBox")] 
     public bool showMandelBox;
     public Color mandelBoxColor;
     public Vector3 mandelBoxPos;
@@ -201,6 +202,7 @@ public class FractalVisualizer : MonoBehaviour{
         
         //MENGER SPONGE
         RayMarchMaterial.SetInt(ShowSponge,showMengerSponge?1:0);
+        RayMarchMaterial.SetInt("animateSponge",animateMengerSponge?1:0);
         RayMarchMaterial.SetVector(SpongePos,spongePos);
         RayMarchMaterial.SetColor(SpongeColor, spongeColor);
         RayMarchMaterial.SetInt(SpongeIterations,spongeIter);
