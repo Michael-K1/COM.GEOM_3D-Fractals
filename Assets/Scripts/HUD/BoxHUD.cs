@@ -8,8 +8,8 @@ public class BoxHUD : FractalHUD{
     [Header("Mandel Box")]
     public Toggle animate;
 
-    public Slider iter, scale, size;
-    public TMP_Text iterL, scaleL, sizeL;
+    public Slider iter, scale, size, minRad, fixRad;
+    public TMP_Text iterL, scaleL, sizeL, minRadL, fixRadL;
     void Start(){
         BaseSetup(Fv.showMandelBox, Fv.mandelBoxColor, Fv.mandelBoxPos);
 
@@ -17,6 +17,8 @@ public class BoxHUD : FractalHUD{
         iter.value = Fv.mandelBoxIter;
         scale.value = Fv.mandelBoxScale;
         size.value = Fv.mandelBoxSize;
+        minRad.value = Fv.mandelBoxMinRadius;
+        fixRad.value = Fv.mandelBoxFixedRadius;
     }
 
     // Update is called once per frame
@@ -27,5 +29,8 @@ public class BoxHUD : FractalHUD{
         Fv.mandelBoxIter=(int)iter.value;
         Fv.mandelBoxScale=scale.value;
         Fv.mandelBoxSize=size.value;
+        Fv.mandelBoxMinRadius=minRad.value;
+        Fv.mandelBoxFixedRadius=fixRad.value;
+        fixRad.interactable = !animate.isOn;
     }
 }
