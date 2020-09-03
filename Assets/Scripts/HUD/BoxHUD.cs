@@ -32,5 +32,11 @@ public class BoxHUD : FractalHUD{
         Fv.mandelBoxMinRadius=minRad.value;
         Fv.mandelBoxFixedRadius=fixRad.value;
         fixRad.interactable = !animate.isOn;
+        
+        iterL.text = $"Iterations\t\t{Fv.mandelBoxIter}";
+        scaleL.text = $"Scale\t\t\t{Fv.mandelBoxScale}";
+        sizeL.text = $"Size\t\t\t{Fv.mandelBoxSize}";
+        minRadL.text = $"Min Radius\t\t{Fv.mandelBoxMinRadius}";
+        fixRadL.text = $"Fixed Radius\t{Fv.mandelBoxFixedRadius}";
     }
 }
