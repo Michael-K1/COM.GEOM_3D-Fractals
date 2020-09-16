@@ -22,7 +22,7 @@ public class SpongeHUD : FractalHUD{
 
         Fv.animateMengerSponge = animate.isOn;
         Fv.spongeIter = (int)iter.value;
-        iterLabel.text = $"Iterations\t{Fv.spongeIter}";
+        iterLabel.text = $"Iterations\t\t{Fv.spongeIter}";
         
 
     }

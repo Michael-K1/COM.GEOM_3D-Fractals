@@ -200,70 +200,30 @@ Shader "Fractals/RayMarching"
                 return result;
             }
             
-            /*float3 shading2(float3 rayO, float3 pos){
-                float3 color, mat;
-                float3 n=getNormal(pos);
-                
-                mat=hsv2rgb(float3(dot(rayO, rayO),1,1));
-                
-                float shadow=SoftShadow(pos, -_LightDir, _ShadowDistance.x, _ShadowDistance.y, _ShadowPenumbra) * 0.5+0.5;
-                shadow=max(0.0, pow(shadow, _ShadowIntensity));
-                float ao=AmbientOcclusion(pos, n);
-                
-            }*/
-            /*float g=0;
-            float3 mandelColor(float3 ro, float3 rd, float r){
-                float3 c = float3(0,0,0);
-                float3 cs = 0.5 + 0.5*cos(_Time.y+rd.xyx+float3(0,2,4));
-                
-                if(r>0.)
-                {
-                    float3 p = ro+rd*r;
-                    float3 n = getNormal(p);
-                    float3 sun = normalize(float3(0.2,0.5,0.3));
-                    float dif = clamp(dot(sun,n),0.0,1.0);
-                    float sky = clamp(0.5+0.5*dot(n,float3(0,1,0)),0.,1.);
-                    
-                    c=float3(r,r,r)*-.1;
-                    c+=cs*r*dif;
-                    c+=r*sky*float3(0.9,0.5,0.5);
-                    
-                }
-                
-                
-                return c+(g/75.*cs);
-            }*/
             
-            bool RayMarching(float3 rayOrigin, float3 rayDirection, float depth, float maxRayDist, int maxIteration, inout float3 pos, inout fixed3 dColor){
-                bool hit;
-                float t=0; //distance traveled along the ray direction
+            fixed4 RayMarching(float3 rayOrigin, float3 rayDirection, float depth){
+                float3 pos;
+                float t=0;                                  //distance traveled along the ray direction
                 
-                for(int i=0;i<maxIteration;i++ ){
-                    if(t>maxRayDist || t>= depth){//create the environment where the ray hits no target
-                        hit=false;
-                        break;
-                    }
+                for(int i=0;i<maxRaySteps;i++ ){
+                    if(t>maxRayDistance || t>= depth)       //create the environment where the ray hits no target
+                         break;
                     
-                    pos= rayOrigin + rayDirection * t;//current position of the ray
+                    pos= rayOrigin + rayDirection * t;      //current position of the ray
                     
-                      //check for hit in distance field
-                    float4 d=distanceField(pos);
-                    /*
-                    if(mandelDynamicColor==1 && showMandelBulb==1)
-                        g+=0.1/(0.1+d.w*d.w);
-                    */
-                    if(d.w<ACCURACY){//the ray has hit something
-                      /*  if(mandelDynamicColor==1 && showMandelBulb==1){
-                            float3 col=mandelColor(rayOrigin, rayDirection, t);
-                            dColor=fixed3(col.rgb);                  
-                        }else*/
-                            dColor=d.rgb;
-                        hit= true;
-                        break;
+                    
+                    float4 d=distanceField(pos);            //check for hit in distance field
+
+                    if(d.w<ACCURACY){                       //the ray has hit something
+                        
+                        float3 n=getNormal(pos);            //calculate normals of the point
+                        float3 s=Shading(pos, n, d.rgb);    //add colour and shades the object accordingly
+                        return fixed4(s, 1);                //returns the colour of the object in that position
                     }
                     t+=d.w;
                 }
-                return hit;
+                return fixed4(0,0,0,0);            //returns NO colour for nothing has been hitted
+                    
             }
             
             
@@ -277,21 +237,9 @@ Shader "Fractals/RayMarching"
                 float3 rayDirection=normalize(i.ray.xyz);
                 float3 rayOrigin=_WorldSpaceCameraPos;
                 
-                fixed4 result;
-                float3 hitPosition;
-                float3 dColor;
-                
-                bool hit=RayMarching(rayOrigin, rayDirection, depth, maxRayDistance, maxRaySteps, hitPosition, dColor);
-                if(hit){ 
-                    //shading!
-                    float3 n=getNormal(hitPosition);
-                    float3 s=Shading(hitPosition, n, dColor);
-                    result=fixed4(s, 1);  
-                }else
-                    result=fixed4(0,0,0,0);
-                
+                fixed4 result=RayMarching(rayOrigin, rayDirection, depth);;
+                            
 
-                
                 return fixed4(col * (1.0- result.w) + result.xyz * result.w, 1.0 );             
             }
             ENDCG
