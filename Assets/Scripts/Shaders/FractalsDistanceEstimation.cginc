@@ -9,7 +9,6 @@ float sdPlane(float3 p, float4 n){
 // FRACTALS //
 //Sierpinski Tetrahedron
 float sdTetrahedron(float3 pos, int tetraIterations, float scale){
-    //scale=scale *(abs(cos(_Time.y*.1)));
     float3 a1=float3(  0,  0.5, 0) * scale;
     float3 a2=float3(  0, -1,  1 ) * scale;
     float3 a3=float3(  1, -1, -0.5)* scale;

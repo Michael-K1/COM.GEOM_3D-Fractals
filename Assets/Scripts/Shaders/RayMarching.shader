@@ -1,3 +1,4 @@
+
 Shader "Fractals/RayMarching"
 {
     Properties
@@ -222,6 +223,7 @@ Shader "Fractals/RayMarching"
                     }
                     t+=d.w;
                 }
+                
                 return fixed4(0,0,0,0);            //returns NO colour for nothing has been hitted
                     
             }
