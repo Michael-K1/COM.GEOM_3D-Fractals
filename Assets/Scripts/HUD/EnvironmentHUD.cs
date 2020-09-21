@@ -60,7 +60,7 @@ public class EnvironmentHUD : MonoBehaviour{
 
     private void UpdateRaymarch(){
         fv.ACCURACY = accuracySlider.value;
-        accuracyLabel.text = $"Accuracy\t\t{accuracySlider.value}";
+        accuracyLabel.text = $"Accuracy\t{accuracySlider.value}";
     }
 
     private void UpdateEnvironment(){
