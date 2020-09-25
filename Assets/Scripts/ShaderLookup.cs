@@ -25,6 +25,7 @@ public static class ShaderLookup{
     public static readonly int GroundColor = Shader.PropertyToID("groundColor");
     public static readonly int ColorIntensity = Shader.PropertyToID("_ColorIntensity");
     public static readonly int ShapeBlending = Shader.PropertyToID("shapeBlending");
+    public static readonly int ShowPlane = Shader.PropertyToID("showPlane");
     
     //TETRAHEDRON
     public static readonly int ShowTetra = Shader.PropertyToID("showTetra");

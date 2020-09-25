@@ -4,6 +4,7 @@ using static  ShaderLookup;
 [ExecuteInEditMode]
 [ImageEffectAllowedInSceneView]
 public class FractalVisualizer : MonoBehaviour{
+    
     [SerializeField] 
     private Shader rayMarchingShader;
     private Material rayMarchMat;
@@ -40,6 +41,7 @@ public class FractalVisualizer : MonoBehaviour{
     
     [Header("Environment")]
     public Color groundColor;
+    public bool showPlane;
     [Range(0,4)]
     public float colorIntensity;
     [Range(0,4)]
@@ -128,7 +130,7 @@ public class FractalVisualizer : MonoBehaviour{
     [Range(2f,5f)]
     public float mandelBoxFixedRadius=.5f;
 
-
+    
 
     #endregion
     
@@ -137,10 +139,8 @@ public class FractalVisualizer : MonoBehaviour{
             Graphics.Blit(src,dest);
             return;
         }
-/*
-        if (showMandel)
-            showTetra = showPaxis = !showMandel;
-        */
+
+        
         //view setup
         RayMarchMaterial.SetMatrix(Frustum,CamFrustum(ThisCamera));
         RayMarchMaterial.SetMatrix(CamToWorld, ThisCamera.cameraToWorldMatrix);
@@ -168,6 +168,7 @@ public class FractalVisualizer : MonoBehaviour{
         
         //Environment
         RayMarchMaterial.SetColor(GroundColor, groundColor);
+        RayMarchMaterial.SetInt(ShowPlane,showPlane?1:0);
         RayMarchMaterial.SetFloat(ColorIntensity, colorIntensity );
         RayMarchMaterial.SetFloat(ShapeBlending, shapeBlending );
         

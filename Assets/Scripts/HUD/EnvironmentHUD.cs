@@ -11,6 +11,7 @@ public class EnvironmentHUD : MonoBehaviour{
     public TMP_Text accuracyLabel;
     
     public ColorHUD groundColor;
+    public Toggle showPlane;
     public Slider colorIntensitySlider, shapeBlendingSlider;
     
     [Header("Lighting")]
@@ -34,6 +35,7 @@ public class EnvironmentHUD : MonoBehaviour{
         groundColor.SetUp(fv.groundColor);
         colorIntensitySlider.value = fv.colorIntensity;
         shapeBlendingSlider.value = fv.shapeBlending;
+        showPlane.isOn = fv.showPlane;
         
         //lighting
         lightColor.SetUp(fv.lightColor);
@@ -67,6 +69,7 @@ public class EnvironmentHUD : MonoBehaviour{
         groundColor.UpdateColor(ref fv.groundColor);
         fv.colorIntensity = colorIntensitySlider.value;
         fv.shapeBlending = shapeBlendingSlider.value;
+        fv.showPlane = showPlane.isOn;
     }
 
     private void UpdateLighting(){

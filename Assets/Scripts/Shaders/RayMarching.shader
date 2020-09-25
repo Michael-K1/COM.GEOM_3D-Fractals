@@ -45,6 +45,7 @@ Shader "Fractals/RayMarching"
             
             //ground
             uniform fixed4 groundColor;
+            uniform int showPlane;
             uniform float shapeBlending;
             
             //Sierpinski tetrahedron
@@ -112,8 +113,11 @@ Shader "Fractals/RayMarching"
             }
             
             float4 distanceField(float3 pos){
-                float4 combine=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));;
-                
+                float4 combine=float4(0,0,0,10000000);
+                if(showPlane==1){
+                    float4 plane=float4(groundColor.rgb, sdPlane(pos, float4(0, 1, 0, 0)));
+                    combine=opUS(combine, plane, shapeBlending);
+                   }
                 if(showTetra==1){
                     float4 tetra=float4(tetraColor.rgb, sdTetrahedron(pos-tetraPos.xyz, tetraIterations,tetraScale));
                     combine=opUS(combine, tetra, shapeBlending);

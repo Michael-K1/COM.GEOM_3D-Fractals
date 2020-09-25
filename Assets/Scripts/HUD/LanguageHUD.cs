@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 
 public class LanguageHUD : MonoBehaviour{
-    private bool isEng;
+    public bool isEng;
     private TMP_Text buttonText;
     private List<GameObject> engPanels, itaPanels;
 
@@ -13,11 +13,9 @@ public class LanguageHUD : MonoBehaviour{
         itaPanels = new List<GameObject>(GameObject.FindGameObjectsWithTag("Lang/Ita"));
 
         buttonText = GetComponentInChildren<TMP_Text>();
-        
-        isEng = true;
-        buttonText.text = "ITA"; 
-        SetActivation(true, engPanels);
-        SetActivation(false, itaPanels);
+
+        isEng = !isEng;
+        ActivateCorrectLanguage();
     }
 
     public void ActivateCorrectLanguage(){
@@ -27,9 +25,7 @@ public class LanguageHUD : MonoBehaviour{
       
         SetActivation(isEng, engPanels);
         SetActivation(!isEng, itaPanels);
-        
-            
-        
+   
     }
 
     public void SetActivation(bool v, List<GameObject> l){
