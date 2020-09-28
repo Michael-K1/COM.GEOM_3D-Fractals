@@ -203,7 +203,7 @@ public class FractalVisualizer : MonoBehaviour{
         
         //MENGER SPONGE
         RayMarchMaterial.SetInt(ShowSponge,showMengerSponge?1:0);
-        RayMarchMaterial.SetInt("animateSponge",animateMengerSponge?1:0);
+        RayMarchMaterial.SetInt(AnimateSponge,animateMengerSponge?1:0);
         RayMarchMaterial.SetVector(SpongePos,spongePos);
         RayMarchMaterial.SetColor(SpongeColor, spongeColor);
         RayMarchMaterial.SetInt(SpongeIterations,spongeIter);

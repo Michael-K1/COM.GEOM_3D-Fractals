@@ -59,6 +59,7 @@ public static class ShaderLookup{
     //MENGER SPONGE
     public static readonly int ShowSponge = Shader.PropertyToID("showSponge");
     public static readonly int SpongePos = Shader.PropertyToID("spongePos");
+    public static readonly int AnimateSponge = Shader.PropertyToID("animateSponge");
     public static readonly int SpongeColor = Shader.PropertyToID("spongeColor");
     public static readonly int SpongeIterations = Shader.PropertyToID("spongeIterations");
     
